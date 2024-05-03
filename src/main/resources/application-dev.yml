@@ -1,0 +1,49 @@
+server:
+  port: 8080 # 服务器端口
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver # MySQL数据库驱动
+    url: jdbc:mysql://127.0.0.1:3306/hotpot # MySQL数据库地址
+    username: root # MySQL数据库账号
+    password: 123456 # MySQL数据库密码
+  data:
+    redis:
+      database: 0 # Redis数据库，默认为0
+      host: 127.0.0.1 # Redis地址
+      port: 6379 # Redis端口号，默认6379
+      password: # Redis密码，默认为空
+      timeout: 10s
+      lettuce:
+        pool:
+          max-active: 200
+          max-wait: -1ms
+          max-idle: 10
+          min-idle: 0
+  mail:
+    host: smtp.qq.com # QQ邮箱服务器
+    port: 465 # QQ邮箱端口号
+    username: # QQ邮箱账号
+    password: # QQ邮箱授权码
+    protocol: smtp
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
+          auth: true
+          starttls:
+            enable: true
+            required: true
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
+sa-token:
+  token-name: token # token 名称（同时也是 cookie 名称）
+  timeout: 2592000 # token 有效期（单位：秒） 默认30天，-1 代表永久有效
+  active-timeout: -1
+  is-concurrent: true
+  is-share: true
+  token-style: uuid
+  is-log: true
