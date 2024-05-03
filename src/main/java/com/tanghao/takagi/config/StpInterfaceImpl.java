@@ -1,12 +1,11 @@
 package com.tanghao.takagi.config;
 
 import cn.dev33.satoken.stp.StpInterface;
+import com.tanghao.takagi.utils.JacksonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @description 自定义权限加载接口实现
@@ -20,11 +19,11 @@ public class StpInterfaceImpl implements StpInterface {
      */
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
-        Set<Object> permissionSet = iGlobalCache.sGet("permission");
-        if (null == permissionSet) {
+        String permissionListJson = (String) iGlobalCache.hget(String.valueOf(loginId), "permissionList");
+        if (null == permissionListJson) {
             return new ArrayList<>();
         }
-        return permissionSet.stream().map(Object::toString).collect(Collectors.toList());
+        return JacksonUtil.convertJsonToList(permissionListJson, String.class);
     }
 
     /**
@@ -32,10 +31,10 @@ public class StpInterfaceImpl implements StpInterface {
      */
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
-        Set<Object> roleSet = iGlobalCache.sGet("role");
-        if (null == roleSet) {
+        String roleListJson = (String) iGlobalCache.hget(String.valueOf(loginId), "roleList");
+        if (null == roleListJson) {
             return new ArrayList<>();
         }
-        return roleSet.stream().map(Object::toString).collect(Collectors.toList());
+        return JacksonUtil.convertJsonToList(roleListJson, String.class);
     }
 }

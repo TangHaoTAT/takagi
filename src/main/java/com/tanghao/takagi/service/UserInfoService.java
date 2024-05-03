@@ -2,8 +2,12 @@ package com.tanghao.takagi.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.tanghao.takagi.config.IGlobalCache;
+import com.tanghao.takagi.dto.UserInfoDto;
+import com.tanghao.takagi.entity.Permission;
+import com.tanghao.takagi.entity.Role;
 import com.tanghao.takagi.entity.User;
 import com.tanghao.takagi.entity.UserRole;
+import com.tanghao.takagi.utils.JacksonUtil;
 import com.tanghao.takagi.utils.MailUtil;
 import com.tanghao.takagi.utils.VerCodeUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @description 用户信息Service
@@ -83,12 +90,7 @@ public class UserInfoService {
      */
     public Boolean isAccountExists(String openCode) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        if (VerCodeUtil.isValidEmail(openCode)) {
-            queryWrapper.eq("email_address", openCode);
-        }
-        if (VerCodeUtil.isValidChineseMobileNumber(openCode)) {
-            queryWrapper.eq("mobile_number", openCode);
-        }
+        queryWrapper.eq("email_address", openCode).or().eq("mobile_number", openCode);
         User user = userService.getOne(queryWrapper);
         return null != user;
     }
@@ -123,6 +125,19 @@ public class UserInfoService {
      * @param openCode 邮箱或手机号
      */
     public void refreshUserInfoInRedis(String openCode) {
-
+        Map<String, Object> userInfo = new HashMap<>();
+        UserInfoDto userInfoDto = userService.getBaseMapper().getUserInfoDtoByOpenCode(openCode);
+        if (null != userInfoDto) {
+            User user = userInfoDto.getUser();
+            List<Role> roleList = userInfoDto.getRoleList();
+            List<String> roles = roleList.stream().map(Role::getCode).toList();
+            List<Permission> permissionList = userInfoDto.getPermissionList();
+            List<String> permissions = permissionList.stream().map(Permission::getCode).toList();
+            userInfo.put("userId", user.getId());
+            userInfo.put("name", user.getName());
+            userInfo.put("roleList", JacksonUtil.convertObjectToJson(roles));
+            userInfo.put("permissionList", JacksonUtil.convertObjectToJson(permissions));
+        }
+        iGlobalCache.hmset(openCode, userInfo);
     }
 }
