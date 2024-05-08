@@ -11,24 +11,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * @description 用户Controller
+ * @description 登录Controller
  */
 @Slf4j
 @RestController
 @RequestMapping("/user")
-@Tag(name = "用户Controller")
-public class UserController {
+@Tag(name = "登录")
+public class LoginController {
     @Autowired
     private UserInfoService userInfoService;
 
     /**
      * 根据openCode发送邮件验证码或手机短信验证码
-     * 在Redis中用‘USER_ + openCode’格式的key存储用户相关信息
+     * 在Redis中以openCode为key存储用户相关信息
      * ‘verCode’作为用户信息中验证码的key，查询Redis中用户的验证码信息
      */
-    @PostMapping("/login")
-    @Operation(summary ="登录")
-    public CommonResult login(@RequestBody PasswordlessLoginInfoVo passwordlessLoginInfoVo) {
+    @PostMapping("/passwordlessLogin")
+    @Operation(summary ="手机或邮箱免密登录-发送登录验证码")
+    public CommonResult passwordlessLogin(@RequestBody PasswordlessLoginInfoVo passwordlessLoginInfoVo) {
         if (null == passwordlessLoginInfoVo || null == passwordlessLoginInfoVo.getOpenCode()) {
             throw new RuntimeException("账号不能为空");
         }
@@ -42,9 +42,9 @@ public class UserController {
     /**
      * 根据openCode和verCode校验并登录，若该用户是第一次登录系统，为其创建账号
      */
-    @PostMapping("/checkVerCode")
-    @Operation(summary ="校验登录验证码")
-    public CommonResult checkVerCode(@RequestBody PasswordlessLoginInfoVo passwordlessLoginInfoVo) {
+    @PostMapping("/checkPasswordlessLoginVerCode")
+    @Operation(summary ="手机或邮箱免密登录-校验登录验证码")
+    public CommonResult checkPasswordlessLoginVerCode(@RequestBody PasswordlessLoginInfoVo passwordlessLoginInfoVo) {
         if (null == passwordlessLoginInfoVo || null == passwordlessLoginInfoVo.getOpenCode() || null == passwordlessLoginInfoVo.getVerCode()) {
             throw new RuntimeException("账号或验证码不能为空");
         }

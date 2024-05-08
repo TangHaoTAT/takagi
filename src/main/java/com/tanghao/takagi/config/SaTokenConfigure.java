@@ -16,8 +16,8 @@ public class SaTokenConfigure implements WebMvcConfigurer {
         // 注册 Sa-Token 拦截器，打开注解式鉴权功能WebMvcConfigurer
         registry.addInterceptor(new SaInterceptor())
                 .addPathPatterns("/**")
-                .excludePathPatterns("/user/login")
-                .excludePathPatterns("/user/checkVerCode")
+                .excludePathPatterns("/user/passwordlessLogin")
+                .excludePathPatterns("/user/checkPasswordlessLoginVerCode")
                 .excludePathPatterns("/user/logout");
     }
 }
