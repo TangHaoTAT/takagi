@@ -1,5 +1,6 @@
 package com.tanghao.takagi.controller;
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
 import com.tanghao.takagi.service.UserInfoService;
 import com.tanghao.takagi.vo.CommonResult;
@@ -65,6 +66,7 @@ public class LoginController {
         return CommonResult.ok();
     }
 
+    @SaCheckLogin
     @PostMapping("/logout")
     @Operation(summary ="退出登录")
     public CommonResult logout() {

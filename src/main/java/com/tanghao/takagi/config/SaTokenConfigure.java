@@ -17,8 +17,7 @@ public class SaTokenConfigure implements WebMvcConfigurer {
         registry.addInterceptor(new SaInterceptor())
                 .addPathPatterns("/**")
                 .excludePathPatterns("/user/passwordlessLogin")
-                .excludePathPatterns("/user/checkPasswordlessLoginVerCode")
-                .excludePathPatterns("/user/logout");
+                .excludePathPatterns("/user/checkPasswordlessLoginVerCode");
     }
 }
 
