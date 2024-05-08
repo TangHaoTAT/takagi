@@ -3,7 +3,7 @@ package com.tanghao.takagi.controller;
 import cn.dev33.satoken.stp.StpUtil;
 import com.tanghao.takagi.service.UserInfoService;
 import com.tanghao.takagi.vo.CommonResult;
-import com.tanghao.takagi.vo.LoginInfoVo;
+import com.tanghao.takagi.vo.PasswordlessLoginInfoVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -28,12 +28,12 @@ public class UserController {
      */
     @PostMapping("/login")
     @Operation(summary ="登录")
-    public CommonResult login(@RequestBody LoginInfoVo loginInfoVo) {
-        if (null == loginInfoVo || null == loginInfoVo.getOpenCode()) {
+    public CommonResult login(@RequestBody PasswordlessLoginInfoVo passwordlessLoginInfoVo) {
+        if (null == passwordlessLoginInfoVo || null == passwordlessLoginInfoVo.getOpenCode()) {
             throw new RuntimeException("账号不能为空");
         }
 
-        String openCode = loginInfoVo.getOpenCode();
+        String openCode = passwordlessLoginInfoVo.getOpenCode();
         userInfoService.sendVerCodeByOpenCode(openCode);
 
         return CommonResult.ok();
@@ -44,13 +44,13 @@ public class UserController {
      */
     @PostMapping("/checkVerCode")
     @Operation(summary ="校验登录验证码")
-    public CommonResult checkVerCode(@RequestBody LoginInfoVo loginInfoVo) {
-        if (null == loginInfoVo || null == loginInfoVo.getOpenCode() || null == loginInfoVo.getVerCode()) {
+    public CommonResult checkVerCode(@RequestBody PasswordlessLoginInfoVo passwordlessLoginInfoVo) {
+        if (null == passwordlessLoginInfoVo || null == passwordlessLoginInfoVo.getOpenCode() || null == passwordlessLoginInfoVo.getVerCode()) {
             throw new RuntimeException("账号或验证码不能为空");
         }
 
-        String openCode = loginInfoVo.getOpenCode();
-        String verCode = loginInfoVo.getVerCode();
+        String openCode = passwordlessLoginInfoVo.getOpenCode();
+        String verCode = passwordlessLoginInfoVo.getVerCode();
         Boolean status = userInfoService.isOpenCodeAndVerCodeMatch(openCode, verCode);
         if (!status) {
             throw new RuntimeException("验证码过期，请重新发送");

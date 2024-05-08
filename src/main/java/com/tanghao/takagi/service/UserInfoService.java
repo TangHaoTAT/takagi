@@ -57,11 +57,11 @@ public class UserInfoService {
      */
     public void sendVerCodeByOpenCode(String openCode) {
         String verCode = VerCodeUtil.generateVerCode();
+        iGlobalCache.hset(openCode, "verCode", verCode, 600L);
         if (VerCodeUtil.isValidEmail(openCode)) {
-            iGlobalCache.hset(openCode, "verCode", verCode, 300L);
             Context context = new Context();
             context.setVariable("verCode", Arrays.asList(verCode.split("")));
-            String text = templateEngine.process("EmailVerCode", context);;
+            String text = templateEngine.process("EmailVerCode", context);
             mailUtil.sendMailMessage(Arrays.asList(openCode).toArray(new String[0]), "注册验证码", text, true, null);
             log.info("邮件验证码已发送至：" + openCode);
         }
