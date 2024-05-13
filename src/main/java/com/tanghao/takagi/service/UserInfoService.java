@@ -2,7 +2,6 @@ package com.tanghao.takagi.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.tanghao.takagi.config.IGlobalCache;
-import com.tanghao.takagi.dto.UserInfoDto;
 import com.tanghao.takagi.entity.Permission;
 import com.tanghao.takagi.entity.Role;
 import com.tanghao.takagi.entity.User;
@@ -16,10 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @description 用户信息Service
@@ -53,6 +49,7 @@ public class UserInfoService {
 
     /**
      * 根据openCode发送邮件验证码或手机短信验证码
+     * 在Redis中存储验证码信息，以‘openCode’的值为key，‘verCode’为field
      * @param openCode 邮箱或手机号
      */
     public void sendVerCodeByOpenCode(String openCode) {
@@ -63,7 +60,7 @@ public class UserInfoService {
             context.setVariable("verCode", Arrays.asList(verCode.split("")));
             String text = templateEngine.process("EmailVerCode", context);
             mailUtil.sendMailMessage(Arrays.asList(openCode).toArray(new String[0]), "注册验证码", text, true, null);
-            log.info("邮件验证码已发送至：" + openCode);
+            log.info("邮箱验证码已发送至：" + openCode);
         }
         if (VerCodeUtil.isValidChineseMobileNumber(openCode)) {
             log.info("短信验证码已发送至：");
@@ -71,7 +68,7 @@ public class UserInfoService {
     }
 
     /**
-     * 校验openCode和verCode是否匹配
+     * 校验openCode与verCode是否匹配
      * @param openCode 邮箱或手机号
      * @param verCode 验证码
      */
@@ -85,22 +82,22 @@ public class UserInfoService {
     }
 
     /**
-     * 根据openCode查询该用户是否存在
+     * 根据openCode获取用户
      * @param openCode 邮箱或手机号
      */
-    public Boolean isAccountExists(String openCode) {
+    public User getUserByOpenCode(String openCode) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("email_address", openCode).or().eq("mobile_number", openCode);
-        User user = userService.getOne(queryWrapper);
-        return null != user;
+        return userService.getOne(queryWrapper);
     }
 
     /**
      * 根据openCode为新用户注册一个账号
      * @param openCode 邮箱或手机号
+     * @param password 密码
      */
     @Transactional
-    public void insertNewAccount(String openCode, String password) {
+    public User insertNewAccount(String openCode, String password) {
         User user = new User();
         user.setDeleted(false);
         userService.save(user);
@@ -118,26 +115,26 @@ public class UserInfoService {
         userRole.setUserId(user.getId());
         userRole.setRoleId(1L);// LV0萌新
         userRoleService.save(userRole);
+        return user;
     }
 
     /**
      * 刷新Redis中的用户信息，主要是用户基本信息以及角色、权限
-     * @param openCode 邮箱或手机号
+     * @param userId 用户id
      */
-    public void refreshUserInfoInRedis(String openCode) {
+    public void refreshUserInfoInRedis(Long userId) {
         Map<String, Object> userInfo = new HashMap<>();
-        UserInfoDto userInfoDto = userService.getBaseMapper().getUserInfoDtoByOpenCode(openCode);
-        if (null != userInfoDto) {
-            User user = userInfoDto.getUser();
-            List<Role> roleList = userInfoDto.getRoleList();
+        User user = userService.getBaseMapper().selectById(userId);
+        if (null != user) {
+            List<Role> roleList = roleService.getBaseMapper().listRoleByUserId(userId);
             List<String> roles = roleList.stream().map(Role::getCode).toList();
-            List<Permission> permissionList = userInfoDto.getPermissionList();
+            List<Permission> permissionList = permissionService.getBaseMapper().listPermissionByUserId(userId);
             List<String> permissions = permissionList.stream().map(Permission::getCode).toList();
             userInfo.put("userId", user.getId());
-            userInfo.put("name", user.getName());
             userInfo.put("roleList", JacksonUtil.convertObjectToJson(roles));
             userInfo.put("permissionList", JacksonUtil.convertObjectToJson(permissions));
+            String loginId = userId + "";
+            iGlobalCache.hmset(loginId, userInfo);
         }
-        iGlobalCache.hmset(openCode, userInfo);
     }
 }

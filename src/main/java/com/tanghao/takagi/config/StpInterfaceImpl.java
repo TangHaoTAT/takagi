@@ -19,7 +19,7 @@ public class StpInterfaceImpl implements StpInterface {
      */
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
-        String permissionListJson = (String) iGlobalCache.hget(String.valueOf(loginId), "permissionList");
+        String permissionListJson = (String) iGlobalCache.hget(loginId.toString(), "permissionList");
         if (null == permissionListJson) {
             return new ArrayList<>();
         }
@@ -31,7 +31,7 @@ public class StpInterfaceImpl implements StpInterface {
      */
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
-        String roleListJson = (String) iGlobalCache.hget(String.valueOf(loginId), "roleList");
+        String roleListJson = (String) iGlobalCache.hget(loginId.toString(), "roleList");
         if (null == roleListJson) {
             return new ArrayList<>();
         }

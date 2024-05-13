@@ -2,6 +2,7 @@ package com.tanghao.takagi.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
+import com.tanghao.takagi.entity.User;
 import com.tanghao.takagi.service.UserInfoService;
 import com.tanghao.takagi.vo.CommonResult;
 import com.tanghao.takagi.vo.PasswordlessLoginInfoVo;
@@ -24,8 +25,6 @@ public class LoginController {
 
     /**
      * 根据openCode发送邮件验证码或手机短信验证码
-     * 在Redis中以openCode为key存储用户相关信息
-     * ‘verCode’作为用户信息中验证码的key，查询Redis中用户的验证码信息
      */
     @PostMapping("/passwordlessLogin")
     @Operation(summary ="手机或邮箱免密登录-发送登录验证码")
@@ -41,7 +40,8 @@ public class LoginController {
     }
 
     /**
-     * 根据openCode和verCode校验并登录，若该用户是第一次登录系统，为其创建账号
+     * 根据openCode和verCode校验并登录
+     * 若该用户是第一次登录系统，为其创建账号
      */
     @PostMapping("/checkPasswordlessLoginVerCode")
     @Operation(summary ="手机或邮箱免密登录-校验登录验证码")
@@ -56,12 +56,15 @@ public class LoginController {
         if (!status) {
             throw new RuntimeException("验证码过期，请重新发送");
         }
-        Boolean exists = userInfoService.isAccountExists(openCode);
-        if (!exists) {
-            userInfoService.insertNewAccount(openCode, null);
+        User user = userInfoService.getUserByOpenCode(openCode);
+        if (null == user) {
+            user = userInfoService.insertNewAccount(openCode, null);
         }
-        StpUtil.login(openCode);
-        userInfoService.refreshUserInfoInRedis(openCode);
+
+        Long userId = user.getId();
+        userInfoService.refreshUserInfoInRedis(userId);
+        String loginId = userId + "";
+        StpUtil.login(loginId);
 
         return CommonResult.ok();
     }
