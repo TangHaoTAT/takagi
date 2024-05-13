@@ -93,7 +93,7 @@ CREATE TABLE `user`  (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (1, '土豆饼oTATo', '', 'tanghao.null@qq.com', '', 0);
+INSERT INTO `user` VALUES (1, '土豆饼oTATo', '', 'tanghao.null@qq.com', 'e10adc3949ba59abbe56e057f20f883e', 0);-- 密码为123456经过MD5加密
 
 -- ----------------------------
 -- Table structure for user_role
