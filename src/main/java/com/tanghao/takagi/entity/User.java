@@ -31,4 +31,6 @@ public class User {
 
     public Integer gender;// 性别:0=保密,1=男,2=女
 
+    public String avatarUrl;//头像地址
+
 }

@@ -27,4 +27,7 @@ public class UserInfoVo {
     @Schema(name = "gender", description = "性别:0=保密,1=男,2=女")
     public Integer gender;
 
+    @Schema(name = "avatarUrl", description = "头像地址")
+    public String avatarUrl;
+
 }

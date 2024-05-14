@@ -2,8 +2,10 @@ package com.tanghao.takagi.config;
 
 import cn.dev33.satoken.interceptor.SaInterceptor;
 import cn.dev33.satoken.stp.StpUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
@@ -11,7 +13,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class SaTokenConfigure implements WebMvcConfigurer {
-    //放行路径
+//    @Value("${file.static-access-url}")
+//    private String staticAccessUrl;// 文件请求路径
+
+//    @Value("${file.upload-folder}")
+//    private String uploadFolder;// 文件真实路径
+
     private static final String[] SWAGGER = {
             "**/swagger-ui.html",
             "/swagger-resources/**",
@@ -24,14 +31,14 @@ public class SaTokenConfigure implements WebMvcConfigurer {
             "sso/auth",
             "/csrf",
             "/swagger-ui/**",
-            "/v3/**"
+            "/v3/**",
     };
 
     private static final String[] URL = {
             "/user/sendVerCode",
             "/user/passwordlessLogin",
             "/user/login",
-            "/user/register"
+            "/user/register",
     };
 
     // 注册 Sa-Token 拦截器，打开注解式鉴权功能
@@ -43,5 +50,12 @@ public class SaTokenConfigure implements WebMvcConfigurer {
                 .excludePathPatterns(SWAGGER)
                 .excludePathPatterns(URL);
     }
+
+    // 配置文件路径映射
+//    @Override
+//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//        registry.addResourceHandler(staticAccessUrl)
+//                .addResourceLocations(uploadFolder);
+//    }
 }
 

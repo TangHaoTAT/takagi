@@ -1,6 +1,8 @@
 package com.tanghao.takagi.service;
 
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.tanghao.takagi.config.IGlobalCache;
 import com.tanghao.takagi.entity.Permission;
@@ -58,9 +60,10 @@ public class UserInfoService {
         iGlobalCache.hset(openCode, "verCode", verCode, 600L);
         if (TakagiUtil.isValidEmail(openCode)) {
             Context context = new Context();
-            context.setVariable("verCode", Arrays.asList(verCode.split("")));
+            context.setVariable("verCode", ListUtil.toList(verCode.split("")));
             String text = templateEngine.process("EmailVerCode", context);
-            mailUtil.sendMailMessage(Arrays.asList(openCode).toArray(new String[0]), "注册验证码", text, true, null);
+            String[] to = {openCode};
+            mailUtil.sendMailMessage(to, "注册验证码", text, true, null);
             log.info("邮箱验证码已发送至：" + openCode);
         }
         if (TakagiUtil.isValidChineseMobileNumber(openCode)) {
@@ -137,7 +140,7 @@ public class UserInfoService {
     public void refreshUserInfoInRedis(Long userId) {
         Map<String, Object> userInfo = new HashMap<>();
         User user = userService.getBaseMapper().selectById(userId);
-        if (null != user) {
+        if (ObjectUtil.isNotNull(user)) {
             List<Role> roleList = roleService.getBaseMapper().listRoleByUserId(userId);
             List<String> roles = roleList.stream().map(Role::getCode).toList();
             List<Permission> permissionList = permissionService.getBaseMapper().listPermissionByUserId(userId);
@@ -162,6 +165,7 @@ public class UserInfoService {
         userInfoVo.setIntroduce(user.getIntroduce());
         userInfoVo.setBirthday(user.getBirthday());
         userInfoVo.setGender(user.getGender());
+        userInfoVo.setAvatarUrl("");
         return userInfoVo;
     }
 }

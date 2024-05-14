@@ -1,8 +1,10 @@
 package com.tanghao.takagi.controller;
 
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.digest.DigestUtil;
 import com.tanghao.takagi.entity.User;
 import com.tanghao.takagi.service.UserInfoService;
-import com.tanghao.takagi.utils.TakagiUtil;
 import com.tanghao.takagi.vo.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,7 +27,7 @@ public class LoginController {
     @Operation(summary ="发送邮箱验证码或短信验证码")
     public CommonResult sendVerCode(@RequestBody VerCodeVo verCodeVo) {
         String openCode = verCodeVo.getOpenCode();
-        if (TakagiUtil.isBlank(openCode)) {
+        if (StrUtil.isBlank(openCode)) {
             throw new RuntimeException("账号不能为空");
         }
         userInfoService.sendVerCodeByOpenCode(openCode);
@@ -37,7 +39,7 @@ public class LoginController {
     public CommonResult passwordlessLogin(@RequestBody PasswordlessLoginVo passwordlessLoginInfoVo) {
         String openCode = passwordlessLoginInfoVo.getOpenCode();
         String verCode = passwordlessLoginInfoVo.getVerCode();
-        if (TakagiUtil.isBlank(openCode) || TakagiUtil.isBlank(verCode)) {
+        if (StrUtil.isBlank(openCode) || StrUtil.isBlank(verCode)) {
             throw new RuntimeException("账号或验证码不能为空");
         }
         // 校验openCode与verCode是否匹配
@@ -47,7 +49,7 @@ public class LoginController {
         }
         // 若该用户不存在，为其创建账号
         User user = userInfoService.getUserByOpenCode(openCode);
-        if (TakagiUtil.checkValNull(user)) {
+        if (ObjectUtil.isNull(user)) {
             user = userInfoService.insertNewAccount(openCode, null);
         }
         userInfoService.login(user.getId());
@@ -59,11 +61,11 @@ public class LoginController {
     public CommonResult login(@RequestBody LoginVo loginVo) {
         String openCode = loginVo.getOpenCode();
         String password = loginVo.getPassword();
-        if (TakagiUtil.isBlank(openCode) || TakagiUtil.isBlank(password)) {
+        if (StrUtil.isBlank(openCode) || StrUtil.isBlank(password)) {
             throw new RuntimeException("账号或密码不能为空");
         }
         User user = userInfoService.getUserByOpenCode(openCode);
-        if (!TakagiUtil.md5(password).equals(user.getPassword())) {
+        if (!DigestUtil.md5Hex(password).equals(user.getPassword())) {
             throw new RuntimeException("账号或密码错误");
         }
         userInfoService.login(user.getId());
@@ -76,7 +78,7 @@ public class LoginController {
         String openCode = registerVo.getOpenCode();
         String password = registerVo.getPassword();
         String verCode = registerVo.getVerCode();
-        if (TakagiUtil.isBlank(openCode) || TakagiUtil.isBlank(password) || TakagiUtil.isBlank(verCode)) {
+        if (StrUtil.isBlank(openCode) || StrUtil.isBlank(password) || StrUtil.isBlank(verCode)) {
             throw new RuntimeException("账号或密码或验证码不能为空");
         }
         // 校验openCode与verCode是否匹配
@@ -86,10 +88,10 @@ public class LoginController {
         }
         // 若该用户不存在，为其创建账号
         User user = userInfoService.getUserByOpenCode(openCode);
-        if (TakagiUtil.checkValNotNull(user)) {
+        if (ObjectUtil.isNotNull(user)) {
             throw new RuntimeException("该账号已存在");
         }
-        userInfoService.insertNewAccount(openCode, TakagiUtil.md5(password));
+        userInfoService.insertNewAccount(openCode, DigestUtil.md5Hex(password));
         return CommonResult.ok();
     }
 

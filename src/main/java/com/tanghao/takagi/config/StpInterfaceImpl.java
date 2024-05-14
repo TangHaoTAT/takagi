@@ -1,6 +1,7 @@
 package com.tanghao.takagi.config;
 
 import cn.dev33.satoken.stp.StpInterface;
+import cn.hutool.core.util.ObjectUtil;
 import com.tanghao.takagi.utils.JacksonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,7 +21,7 @@ public class StpInterfaceImpl implements StpInterface {
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
         String permissionListJson = (String) iGlobalCache.hget(loginId.toString(), "permissionList");
-        if (null == permissionListJson) {
+        if (ObjectUtil.isNull(permissionListJson)) {
             return new ArrayList<>();
         }
         return JacksonUtil.convertJsonToList(permissionListJson, String.class);
@@ -32,7 +33,7 @@ public class StpInterfaceImpl implements StpInterface {
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
         String roleListJson = (String) iGlobalCache.hget(loginId.toString(), "roleList");
-        if (null == roleListJson) {
+        if (ObjectUtil.isNull(roleListJson)) {
             return new ArrayList<>();
         }
         return JacksonUtil.convertJsonToList(roleListJson, String.class);
