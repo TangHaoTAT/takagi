@@ -17,8 +17,8 @@ public class UserInfoVo {
     @Schema(name = "name", description = "名称")
     public String name;
 
-    @Schema(name = "sign", description = "个性签名")
-    public String sign;
+    @Schema(name = "introduce", description = "个性签名")
+    public String introduce;
 
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     @Schema(name = "birthday", description = "生日")

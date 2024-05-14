@@ -25,7 +25,7 @@ public class User {
 
     private String password;// 登录密码
 
-    public String sign;// 个性签名
+    public String introduce;// 个性签名
 
     public Date birthday;// 生日
 

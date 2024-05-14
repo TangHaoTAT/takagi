@@ -159,7 +159,7 @@ public class UserInfoService {
         User user = userService.getBaseMapper().selectById(loginId);
         userInfoVo.setUid(user.getId());
         userInfoVo.setName(user.getName());
-        userInfoVo.setSign(user.getSign());
+        userInfoVo.setIntroduce(user.getIntroduce());
         userInfoVo.setBirthday(user.getBirthday());
         userInfoVo.setGender(user.getGender());
         return userInfoVo;
