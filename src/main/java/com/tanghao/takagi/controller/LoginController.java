@@ -67,6 +67,9 @@ public class LoginController {
         return CommonResult.ok();
     }
 
+    /**
+     * 根据账号密码登录
+     */
     @PostMapping("/login")
     @Operation(summary ="账号密码登录")
     public CommonResult login(@RequestBody LoginVo loginVo) {
@@ -88,6 +91,9 @@ public class LoginController {
         return CommonResult.ok();
     }
 
+    /**
+     * 根据账号、密码、验证码注册账号
+     */
     @PostMapping("/register")
     @Operation(summary ="账号密码注册")
     public CommonResult register(@RequestBody RegisterVo registerVo) {
@@ -111,6 +117,9 @@ public class LoginController {
         return CommonResult.ok();
     }
 
+    /**
+     * 退出登录
+     */
     @PostMapping("/logout")
     @Operation(summary ="退出登录")
     public CommonResult logout() {
