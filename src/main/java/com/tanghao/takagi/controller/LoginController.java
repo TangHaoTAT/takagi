@@ -23,10 +23,10 @@ public class LoginController {
     private UserInfoService userInfoService;
 
     /**
-     * 根据openCode发送邮件验证码或手机短信验证码
+     * 根据openCode发送邮箱验证码或手机短信验证码
      */
-    @PostMapping("/passwordlessLogin")
-    @Operation(summary ="手机或邮箱免密登录-发送登录验证码")
+    @PostMapping("/sendVerCodeByOpenCode")
+    @Operation(summary ="根据openCode发送邮箱验证码或手机短信验证码")
     public CommonResult passwordlessLogin(@RequestBody VerCodeVo verCodeVo) {
         if (null == verCodeVo || null == verCodeVo.getOpenCode()) {
             throw new RuntimeException("账号不能为空");
@@ -42,9 +42,9 @@ public class LoginController {
      * 根据openCode和verCode校验并登录
      * 若该用户是第一次登录系统，为其创建账号
      */
-    @PostMapping("/checkPasswordlessLoginVerCode")
-    @Operation(summary ="手机或邮箱免密登录-校验登录验证码")
-    public CommonResult checkPasswordlessLoginVerCode(@RequestBody PasswordlessLoginVo passwordlessLoginInfoVo) {
+    @PostMapping("/passwordlessLogin")
+    @Operation(summary ="手机或邮箱免密登录")
+    public CommonResult passwordlessLogin(@RequestBody PasswordlessLoginVo passwordlessLoginInfoVo) {
         if (null == passwordlessLoginInfoVo || null == passwordlessLoginInfoVo.getOpenCode() || null == passwordlessLoginInfoVo.getVerCode()) {
             throw new RuntimeException("账号或验证码不能为空");
         }

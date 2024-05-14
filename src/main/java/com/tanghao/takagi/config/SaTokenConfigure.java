@@ -27,9 +27,9 @@ public class SaTokenConfigure implements WebMvcConfigurer {
             "/v3/**"
     };
 
-    private static final String[] URLS = {
+    private static final String[] URL = {
+            "/user/sendVerCodeByOpenCode",
             "/user/passwordlessLogin",
-            "/user/checkPasswordlessLoginVerCode",
             "/user/login",
             "/user/register"
     };
@@ -41,7 +41,7 @@ public class SaTokenConfigure implements WebMvcConfigurer {
         registry.addInterceptor(new SaInterceptor(handle -> StpUtil.checkLogin()))
                 .addPathPatterns("/**")
                 .excludePathPatterns(SWAGGER)
-                .excludePathPatterns(URLS);
+                .excludePathPatterns(URL);
     }
 }
 
