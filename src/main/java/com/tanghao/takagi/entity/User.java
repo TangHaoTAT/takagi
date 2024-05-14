@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import java.util.Date;
 
 /**
  * @description 用户
@@ -23,5 +24,11 @@ public class User {
     private String emailAddress;// 邮箱
 
     private String password;// 登录密码
+
+    public String sign;// 个性签名
+
+    public Date birthday;// 生日
+
+    public Integer gender;// 性别:0=保密,1=男,2=女
 
 }

@@ -6,10 +6,10 @@ import com.tanghao.takagi.config.IGlobalCache;
 import com.tanghao.takagi.entity.Permission;
 import com.tanghao.takagi.entity.Role;
 import com.tanghao.takagi.entity.User;
-import com.tanghao.takagi.entity.UserRole;
 import com.tanghao.takagi.utils.JacksonUtil;
 import com.tanghao.takagi.utils.MailUtil;
 import com.tanghao.takagi.utils.TakagiUtil;
+import com.tanghao.takagi.vo.UserInfoVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -100,7 +100,6 @@ public class UserInfoService {
     @Transactional
     public User insertNewAccount(String openCode, String password) {
         User user = new User();
-        user.setDeleted(false);
         userService.save(user);
         user.setName("用户" + user.getId());
         if (TakagiUtil.isValidEmail(openCode)) {
@@ -111,11 +110,6 @@ public class UserInfoService {
         }
         user.setPassword(password);
         userService.saveOrUpdate(user);
-        UserRole userRole = new UserRole();
-        userRole.setDeleted(false);
-        userRole.setUserId(user.getId());
-        userRole.setRoleId(1L);// 默认角色LV1
-        userRoleService.save(userRole);
         return user;
     }
 
@@ -154,5 +148,20 @@ public class UserInfoService {
             String loginId = "" + userId;
             iGlobalCache.hmset(loginId, userInfo);
         }
+    }
+
+    /**
+     * 获取当前用户信息
+     */
+    public UserInfoVo getCurrentUserInfo() {
+        UserInfoVo userInfoVo = new UserInfoVo();
+        String loginId = StpUtil.getLoginIdAsString();
+        User user = userService.getBaseMapper().selectById(loginId);
+        userInfoVo.setUid(user.getId());
+        userInfoVo.setName(user.getName());
+        userInfoVo.setSign(user.getSign());
+        userInfoVo.setBirthday(user.getBirthday());
+        userInfoVo.setGender(user.getGender());
+        return userInfoVo;
     }
 }
