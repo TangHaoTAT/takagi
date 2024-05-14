@@ -28,7 +28,7 @@ public class SaTokenConfigure implements WebMvcConfigurer {
     };
 
     private static final String[] URL = {
-            "/user/sendVerCodeByOpenCode",
+            "/user/sendVerCode",
             "/user/passwordlessLogin",
             "/user/login",
             "/user/register"

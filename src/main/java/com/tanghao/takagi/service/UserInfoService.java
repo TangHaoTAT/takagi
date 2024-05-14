@@ -1,5 +1,6 @@
 package com.tanghao.takagi.service;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.tanghao.takagi.config.IGlobalCache;
 import com.tanghao.takagi.entity.Permission;
@@ -8,7 +9,7 @@ import com.tanghao.takagi.entity.User;
 import com.tanghao.takagi.entity.UserRole;
 import com.tanghao.takagi.utils.JacksonUtil;
 import com.tanghao.takagi.utils.MailUtil;
-import com.tanghao.takagi.utils.VerCodeUtil;
+import com.tanghao.takagi.utils.TakagiUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,16 +54,16 @@ public class UserInfoService {
      * @param openCode 邮箱或手机号
      */
     public void sendVerCodeByOpenCode(String openCode) {
-        String verCode = VerCodeUtil.generateVerCode();
+        String verCode = TakagiUtil.generateVerCode();
         iGlobalCache.hset(openCode, "verCode", verCode, 600L);
-        if (VerCodeUtil.isValidEmail(openCode)) {
+        if (TakagiUtil.isValidEmail(openCode)) {
             Context context = new Context();
             context.setVariable("verCode", Arrays.asList(verCode.split("")));
             String text = templateEngine.process("EmailVerCode", context);
             mailUtil.sendMailMessage(Arrays.asList(openCode).toArray(new String[0]), "注册验证码", text, true, null);
             log.info("邮箱验证码已发送至：" + openCode);
         }
-        if (VerCodeUtil.isValidChineseMobileNumber(openCode)) {
+        if (TakagiUtil.isValidChineseMobileNumber(openCode)) {
             log.info("短信验证码已发送至：");
         }
     }
@@ -102,10 +103,10 @@ public class UserInfoService {
         user.setDeleted(false);
         userService.save(user);
         user.setName("用户" + user.getId());
-        if (VerCodeUtil.isValidEmail(openCode)) {
+        if (TakagiUtil.isValidEmail(openCode)) {
             user.setEmailAddress(openCode);
         }
-        if (VerCodeUtil.isValidChineseMobileNumber(openCode)) {
+        if (TakagiUtil.isValidChineseMobileNumber(openCode)) {
             user.setMobileNumber(openCode);
         }
         user.setPassword(password);
@@ -119,7 +120,24 @@ public class UserInfoService {
     }
 
     /**
-     * 刷新Redis中的用户信息，主要是用户基本信息以及角色、权限
+     * 退出登录
+     */
+    public void logout() {
+        StpUtil.logout();
+    }
+
+    /**
+     * 登录
+     * @param userId 用户id
+     */
+    public void login(Long userId) {
+        refreshUserInfoInRedis(userId);
+        String loginId = "" + userId;
+        StpUtil.login(loginId);
+    }
+
+    /**
+     * 刷新Redis中的用户信息(用户id、角色、权限）
      * @param userId 用户id
      */
     public void refreshUserInfoInRedis(Long userId) {
@@ -133,7 +151,7 @@ public class UserInfoService {
             userInfo.put("userId", user.getId());
             userInfo.put("roleList", JacksonUtil.convertObjectToJson(roles));
             userInfo.put("permissionList", JacksonUtil.convertObjectToJson(permissions));
-            String loginId = userId + "";
+            String loginId = "" + userId;
             iGlobalCache.hmset(loginId, userInfo);
         }
     }
