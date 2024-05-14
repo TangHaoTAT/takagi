@@ -113,7 +113,7 @@ public class UserInfoService {
         UserRole userRole = new UserRole();
         userRole.setDeleted(false);
         userRole.setUserId(user.getId());
-        userRole.setRoleId(1L);// LV0萌新
+        userRole.setRoleId(1L);// 默认角色LV1
         userRoleService.save(userRole);
         return user;
     }

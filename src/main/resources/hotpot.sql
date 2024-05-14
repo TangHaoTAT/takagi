@@ -48,13 +48,13 @@ CREATE TABLE `role`  (
 -- ----------------------------
 -- Records of role
 -- ----------------------------
-INSERT INTO `role` VALUES (1, 'ADMIN', '系统管理员', 0);
-INSERT INTO `role` VALUES (2, 'LV1', '等级1', 0);
-INSERT INTO `role` VALUES (3, 'LV2', '等级2', 0);
-INSERT INTO `role` VALUES (4, 'LV3', '等级3', 0);
-INSERT INTO `role` VALUES (5, 'LV4', '等级4', 0);
-INSERT INTO `role` VALUES (6, 'LV5', '等级5', 0);
-INSERT INTO `role` VALUES (7, 'LV6', '等级6', 0);
+INSERT INTO `role` VALUES (1, 'LV1', '等级1', 0);
+INSERT INTO `role` VALUES (2, 'LV2', '等级2', 0);
+INSERT INTO `role` VALUES (3, 'LV3', '等级3', 0);
+INSERT INTO `role` VALUES (4, 'LV4', '等级4', 0);
+INSERT INTO `role` VALUES (5, 'LV5', '等级5', 0);
+INSERT INTO `role` VALUES (6, 'LV6', '等级6', 0);
+INSERT INTO `role` VALUES (7, 'ADMIN', '系统管理员', 0);
 
 -- ----------------------------
 -- Table structure for role_permission
