@@ -4,6 +4,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.tanghao.takagi.config.IGlobalCache;
 import com.tanghao.takagi.entity.Permission;
 import com.tanghao.takagi.entity.Role;
@@ -14,6 +15,7 @@ import com.tanghao.takagi.utils.TakagiUtil;
 import com.tanghao.takagi.vo.UserInfoVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
@@ -49,6 +51,9 @@ public class UserInfoService {
 
     @Autowired
     private TemplateEngine templateEngine;
+
+    @Value("${file.access-path}")
+    private String accessPath;
 
     /**
      * 根据openCode发送邮件验证码或手机短信验证码
@@ -101,10 +106,10 @@ public class UserInfoService {
      * @param password 密码
      */
     @Transactional
-    public User insertNewAccount(String openCode, String password) {
+    public User registerNewUser(String openCode, String password) {
         User user = new User();
         userService.save(user);
-        user.setName("用户" + user.getId());
+        user.setName("用户#" + user.getId());
         if (TakagiUtil.isValidEmail(openCode)) {
             user.setEmailAddress(openCode);
         }
@@ -165,7 +170,20 @@ public class UserInfoService {
         userInfoVo.setIntroduce(user.getIntroduce());
         userInfoVo.setBirthday(user.getBirthday());
         userInfoVo.setGender(user.getGender());
-        userInfoVo.setAvatarUrl("");
+        userInfoVo.setAvatarUrl(accessPath + user.getAvatarPath());
         return userInfoVo;
+    }
+
+    /**
+     * 更新头像信息
+     * @param relativePath 头像相对路径
+     */
+    @Transactional
+    public void updateUserAvatar(String relativePath) {
+        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("id", StpUtil.getLoginIdAsLong());
+        User user = new User();
+        user.setAvatarPath(relativePath);
+        userService.update(user, updateWrapper);
     }
 }

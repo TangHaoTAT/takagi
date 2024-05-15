@@ -1,6 +1,10 @@
 server:
   port: 8080 # 服务器端口
 spring:
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver # MySQL数据库驱动
     url: jdbc:mysql://127.0.0.1:3306/hotpot # MySQL数据库地址
@@ -47,3 +51,7 @@ sa-token:
   is-share: true
   token-style: uuid
   is-log: true
+file:
+  static-access-url: /web/upload/** # 文件虚拟路径
+  upload-folder: file:D://MyFiles/upload/ # 文件真实路径
+  access-path: http://127.0.0.1:8080/web/upload/ #访问路径

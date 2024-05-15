@@ -50,7 +50,7 @@ public class LoginController {
         // 若该用户不存在，为其创建账号
         User user = userInfoService.getUserByOpenCode(openCode);
         if (ObjectUtil.isNull(user)) {
-            user = userInfoService.insertNewAccount(openCode, null);
+            user = userInfoService.registerNewUser(openCode, null);
         }
         userInfoService.login(user.getId());
         return CommonResult.ok();
@@ -91,7 +91,7 @@ public class LoginController {
         if (ObjectUtil.isNotNull(user)) {
             throw new RuntimeException("该账号已存在");
         }
-        userInfoService.insertNewAccount(openCode, DigestUtil.md5Hex(password));
+        userInfoService.registerNewUser(openCode, DigestUtil.md5Hex(password));
         return CommonResult.ok();
     }
 

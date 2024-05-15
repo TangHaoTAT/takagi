@@ -79,6 +79,7 @@ CREATE TABLE `user`  (
   `introduce` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '个性签名',
   `birthday` date NULL DEFAULT NULL COMMENT '生日',
   `gender` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '性别:0=保密,1=男,2=女',
+  `avatar_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '头像路径',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
@@ -95,12 +96,30 @@ CREATE TABLE `user_role`  (
   `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `user_id` bigint UNSIGNED NOT NULL COMMENT '用户ID',
   `role_id` bigint UNSIGNED NOT NULL COMMENT '角色ID',
-  `deleted` bigint UNSIGNED NOT NULL DEFAULT 0 COMMENT '逻辑删除:0=未删除,1=已删除',
+  `deleted` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '逻辑删除:0=未删除,1=已删除',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `user_role_ibfk_1`(`user_id`) USING BTREE,
   INDEX `user_role_ibfk_2`(`role_id`) USING BTREE,
   CONSTRAINT `user_role_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `user_role_ibfk_2` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for file_upload_record
+-- ----------------------------
+DROP TABLE IF EXISTS `file_upload_record`;
+CREATE TABLE `file_upload_record`  (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '上传文件ID',
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '文件名',
+  `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '文件类型',
+  `size` bigint UNSIGNED NOT NULL COMMENT '文件大小',
+  `relative_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '相对路径',
+  `user_id` bigint UNSIGNED NOT NULL COMMENT '用户ID',
+  `upload_date` datetime NOT NULL COMMENT '上传时间',
+  `deleted` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '逻辑删除:0=未删除,1=已删除',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `user_id`(`user_id`) USING BTREE,
+  CONSTRAINT `file_upload_record_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -13,11 +13,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class SaTokenConfigure implements WebMvcConfigurer {
-//    @Value("${file.static-access-url}")
-//    private String staticAccessUrl;// 文件请求路径
+    @Value("${file.static-access-url}")
+    private String staticAccessUrl;
 
-//    @Value("${file.upload-folder}")
-//    private String uploadFolder;// 文件真实路径
+    @Value("${file.upload-folder}")
+    private String uploadFolder;
 
     private static final String[] SWAGGER = {
             "**/swagger-ui.html",
@@ -52,10 +52,10 @@ public class SaTokenConfigure implements WebMvcConfigurer {
     }
 
     // 配置文件路径映射
-//    @Override
-//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//        registry.addResourceHandler(staticAccessUrl)
-//                .addResourceLocations(uploadFolder);
-//    }
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler(staticAccessUrl)
+                .addResourceLocations(uploadFolder);
+    }
 }
 
