@@ -165,7 +165,7 @@ public class UserInfoService {
         UserInfoVo userInfoVo = new UserInfoVo();
         String loginId = StpUtil.getLoginIdAsString();
         User user = userService.getBaseMapper().selectById(loginId);
-        userInfoVo.setUid(user.getId());
+        userInfoVo.setUserId(user.getId());
         userInfoVo.setName(user.getName());
         userInfoVo.setIntroduce(user.getIntroduce());
         userInfoVo.setBirthday(user.getBirthday());

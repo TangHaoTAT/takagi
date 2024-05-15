@@ -11,8 +11,8 @@ import java.util.Date;
 @Data
 @Schema(description = "用户基本信息")
 public class UserInfoVo {
-    @Schema(name = "uid", description = "用户id")
-    public Long uid;
+    @Schema(name = "userId", description = "用户id")
+    public Long userId;
 
     @Schema(name = "name", description = "名称")
     public String name;
