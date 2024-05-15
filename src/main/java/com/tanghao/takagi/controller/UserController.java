@@ -22,7 +22,7 @@ public class UserController {
 
     @GetMapping("/getCurrentUserInfo")
     @Operation(summary ="获取当前用户信息")
-    public CommonResult getCurrentUserInfo() {
+    public CommonResult<UserInfoVo> getCurrentUserInfo() {
         UserInfoVo userInfoVo = userInfoService.getCurrentUserInfo();
         return CommonResult.data(userInfoVo);
     }

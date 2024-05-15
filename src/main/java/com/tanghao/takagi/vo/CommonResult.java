@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "通用返回对象")
-public class CommonResult {
+public class CommonResult<T> {
     @Schema(name = "code", description = "状态码")
     private Integer code;// 状态码
 
@@ -20,7 +20,7 @@ public class CommonResult {
     private String msg;// 描述信息
 
     @Schema(name = "data", description = "携带对象")
-    private Object data;// 携带对象
+    private T data;// 携带对象
 
     // 预定的状态码
     public static final int CODE_SUCCESS = 200;
@@ -35,8 +35,8 @@ public class CommonResult {
         return new CommonResult(CODE_SUCCESS, msg, null);
     }
 
-    public static CommonResult data(Object data) {
-        return new CommonResult(CODE_SUCCESS, "ok", data);
+    public static <T> CommonResult<T> data(T data) {
+        return new CommonResult<T>(CODE_SUCCESS, "ok", data);
     }
 
     // 构建失败
@@ -49,8 +49,8 @@ public class CommonResult {
     }
 
     // 构建指定状态码
-    public static CommonResult get(Integer code, String msg, Object data) {
-        return new CommonResult(code, msg, data);
+    public static <T> CommonResult<T> get(Integer code, String msg, T data) {
+        return new CommonResult<>(code, msg, data);
     }
 
     @Override
