@@ -33,4 +33,6 @@ public class User {
 
     public String avatarPath;//头像路径
 
+    public Date registerDate;// 注册时间
+
 }

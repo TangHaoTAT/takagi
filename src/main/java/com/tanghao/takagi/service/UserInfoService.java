@@ -2,6 +2,7 @@ package com.tanghao.takagi.service;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -68,7 +69,7 @@ public class UserInfoService {
             context.setVariable("verCode", ListUtil.toList(verCode.split("")));
             String text = templateEngine.process("EmailVerCode", context);
             String[] to = {openCode};
-            mailUtil.sendMailMessage(to, "注册验证码", text, true, null);
+            mailUtil.sendMailMessage(to, verCode + " 是你的 Takagi 验证码", text, true, null);
             log.info("邮箱验证码已发送至：" + openCode);
         }
         if (TakagiUtil.isValidChineseMobileNumber(openCode)) {
@@ -109,7 +110,7 @@ public class UserInfoService {
     public User registerNewUser(String openCode, String password) {
         User user = new User();
         userService.save(user);
-        user.setName("用户#" + user.getId());
+        user.setName("用户" + user.getId());
         if (TakagiUtil.isValidEmail(openCode)) {
             user.setEmailAddress(openCode);
         }
@@ -117,6 +118,7 @@ public class UserInfoService {
             user.setMobileNumber(openCode);
         }
         user.setPassword(password);
+        user.setRegisterDate(DateUtil.date(System.currentTimeMillis()));
         userService.saveOrUpdate(user);
         return user;
     }
@@ -157,6 +159,29 @@ public class UserInfoService {
             iGlobalCache.hmset(loginId, userInfo);
         }
     }
+
+    /**
+     * 获取当前用户角色
+     */
+    public List<String> listCurrentUserRole() {
+        String roleListJson = (String) iGlobalCache.hget(StpUtil.getLoginIdAsString(), "roleList");
+        if (ObjectUtil.isNull(roleListJson)) {
+            return new ArrayList<>();
+        }
+        return JacksonUtil.convertJsonToList(roleListJson, String.class);
+    }
+
+    /**
+     * 获取当前用户权限
+     */
+    public List<String> listCurrentUserPermission() {
+        String permissionListJson = (String) iGlobalCache.hget(StpUtil.getLoginIdAsString(), "permissionList");
+        if (ObjectUtil.isNull(permissionListJson)) {
+            return new ArrayList<>();
+        }
+        return JacksonUtil.convertJsonToList(permissionListJson, String.class);
+    }
+
 
     /**
      * 获取当前用户信息

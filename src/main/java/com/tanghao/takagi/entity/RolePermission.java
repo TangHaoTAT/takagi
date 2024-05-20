@@ -14,8 +14,6 @@ public class RolePermission {
     @TableId(type = IdType.AUTO)
     private Long id;// 角色权限id
 
-    private Boolean deleted;// 逻辑删除:0=未删除,1=已删除
-
     private Long roleId;// 角色id
 
     private Long permissionId;// 权限id

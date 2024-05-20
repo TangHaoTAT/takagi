@@ -14,8 +14,6 @@ public class UserRole {
     @TableId(type = IdType.AUTO)
     private Long id;// 用户角色id
 
-    private Boolean deleted;// 逻辑删除:0=未删除,1=已删除
-
     private Long userId;// 用户id
 
     private Long roleId;// 角色id
