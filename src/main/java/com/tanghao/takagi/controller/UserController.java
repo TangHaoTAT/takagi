@@ -1,6 +1,5 @@
 package com.tanghao.takagi.controller;
 
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileTypeUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileWriter;
@@ -18,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
-import java.util.Date;
 
 /**
  * @description 用户Controller
@@ -51,13 +49,13 @@ public class UserController {
             throw new RuntimeException("图片需小于2MB，仅支持JPG、PNG格式");
         }
         // 如2024-05-15上传名为abc.png的图片，将按照/2024/5/15/uuid.png格式存储至uploadFolder路径下
-        Date date = DateUtil.date(System.currentTimeMillis());
-        int year = DateUtil.year(date);
-        int month = DateUtil.month(date) + 1;
-        int day = DateUtil.dayOfMonth(date);
-        String uuid = IdUtil.simpleUUID();
-        String fileName = uuid + "." + fileType;
-        String dirName = year + "/" + month + "/" + day + "/";
+//        Date date = DateUtil.date(System.currentTimeMillis());
+//        int year = DateUtil.year(date);
+//        int month = DateUtil.month(date) + 1;
+//        int day = DateUtil.dayOfMonth(date);
+//        String dirName = year + "/" + month + "/" + day + "/";
+        String fileName = IdUtil.simpleUUID() + "." + fileType;
+        String dirName = "avatar/";
         String dirPath = uploadFolder + dirName;
         if (!FileUtil.exist(dirPath)) {
             FileUtil.mkdir(dirPath);
