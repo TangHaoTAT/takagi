@@ -52,6 +52,6 @@ sa-token:
   token-style: uuid
   is-log: true
 file:
-  static-access-url: /web/upload/** # 文件虚拟路径
+  static-access-url: /static/upload/** # 文件虚拟路径
   upload-folder: file:D://MyFiles/upload/ # 文件真实路径
-  access-path: http://127.0.0.1:8080/web/upload/ #访问路径
+  access-path: http://127.0.0.1:8080/static/upload/ #访问路径
