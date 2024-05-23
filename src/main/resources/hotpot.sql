@@ -70,23 +70,20 @@ CREATE TABLE `role_permission`  (
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`  (
   `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '用户ID',
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '姓名',
+  `nickname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '昵称',
   `mobile_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '手机号',
   `email_address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '登录账号',
   `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '登录密码',
   `deleted` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '逻辑删除:0=未删除,1=已删除',
   `introduce` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '个性签名',
-  `birthday` date NULL DEFAULT NULL COMMENT '生日',
-  `gender` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '性别:0=保密,1=男,2=女',
-  `avatar_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '头像路径',
-  `register_date` datetime NOT NULL COMMENT '注册时间',
+  `avatar_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '头像路径',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user`(name, email_address, password,register_date) VALUES ('土豆饼oTATo', 'tanghao.null@qq.com', 'e10adc3949ba59abbe56e057f20f883e','2024-5-21');-- 密码为123456经过MD5加密
+INSERT INTO `user`(nickname, email_address, password,avatar_url) VALUES ('土豆饼oTATo', 'tanghao.null@qq.com', 'e10adc3949ba59abbe56e057f20f883e','https://bbs-static.miyoushe.com/static/2024/04/18/92c8ac852286ad55eb52a65efb669a20_4228166679527276625.gif');-- 密码为123456经过MD5加密
 
 -- ----------------------------
 -- Table structure for user_role

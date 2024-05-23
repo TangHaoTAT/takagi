@@ -1,22 +1,14 @@
 package com.tanghao.takagi.controller;
 
-import cn.hutool.core.io.FileTypeUtil;
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.file.FileWriter;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.IdUtil;
 import com.tanghao.takagi.service.UserInfoService;
 import com.tanghao.takagi.vo.CommonResult;
+import com.tanghao.takagi.vo.UserInfoEditVo;
 import com.tanghao.takagi.vo.UserInfoVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import java.io.IOException;
 
 /**
  * @description 用户Controller
@@ -29,9 +21,6 @@ public class UserController {
     @Autowired
     private UserInfoService userInfoService;
 
-    @Value("${file.upload-folder}")
-    private String uploadFolder;
-
     @GetMapping("/getCurrentUserInfo")
     @Operation(summary ="获取当前用户信息")
     public CommonResult<UserInfoVo> getCurrentUserInfo() {
@@ -39,7 +28,13 @@ public class UserController {
         return CommonResult.data(userInfoVo);
     }
 
-    @Operation(summary ="更新头像")
+    @PostMapping("/userInfoEdit")
+    @Operation(summary ="编辑用户信息")
+    public CommonResult userInfoEdit(@RequestBody UserInfoEditVo userInfoEditVo) {
+        return CommonResult.ok();
+    }
+
+    /*@Operation(summary ="更新头像")
     @PostMapping(value = "/uploadAvatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public CommonResult uploadAvatar(@RequestPart MultipartFile file) throws IOException {
         long fileSize = file.getSize();
@@ -66,5 +61,5 @@ public class UserController {
         String relativePath = dirName + fileName;
         userInfoService.updateUserAvatar(relativePath);
         return CommonResult.ok();
-    }
+    }*/
 }
