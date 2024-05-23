@@ -1,5 +1,6 @@
 package com.tanghao.takagi.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.tanghao.takagi.service.UserInfoService;
 import com.tanghao.takagi.vo.CommonResult;
 import com.tanghao.takagi.vo.UserInfoEditVo;
@@ -21,7 +22,7 @@ public class UserController {
     @Autowired
     private UserInfoService userInfoService;
 
-    @GetMapping("/getCurrentUserInfo")
+    @GetMapping("/getUserInfo")
     @Operation(summary ="获取当前用户信息")
     public CommonResult<UserInfoVo> getCurrentUserInfo() {
         UserInfoVo userInfoVo = userInfoService.getCurrentUserInfo();
@@ -29,8 +30,14 @@ public class UserController {
     }
 
     @PostMapping("/userInfoEdit")
-    @Operation(summary ="编辑用户信息")
+    @Operation(summary ="更新当前用户信息")
     public CommonResult userInfoEdit(@RequestBody UserInfoEditVo userInfoEditVo) {
+        String nickname = userInfoEditVo.getNickname();
+        String introduce = userInfoEditVo.getIntroduce();
+        if (StrUtil.isBlank(nickname)) {
+            throw new RuntimeException("昵称不能为空");
+        }
+        userInfoService.updateCurrentUserInfo(nickname, introduce);
         return CommonResult.ok();
     }
 

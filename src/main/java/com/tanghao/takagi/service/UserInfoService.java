@@ -4,6 +4,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.tanghao.takagi.config.IGlobalCache;
 import com.tanghao.takagi.entity.Permission;
 import com.tanghao.takagi.entity.Role;
@@ -30,16 +31,16 @@ public class UserInfoService {
     private UserService userService;
 
     @Autowired
-    private UserRoleService userRoleService;
-
-    @Autowired
     private RoleService roleService;
 
     @Autowired
-    private RolePermissionService rolePermissionService;
+    private UserRoleService userRoleService;
 
     @Autowired
     private PermissionService permissionService;
+
+    @Autowired
+    private RolePermissionService rolePermissionService;
 
     @Autowired
     private IGlobalCache iGlobalCache;
@@ -96,7 +97,7 @@ public class UserInfoService {
     }
 
     /**
-     * 根据openCode为新用户注册一个账号
+     * 根据openCode和password注册新用户
      * @param openCode 邮箱或手机号
      * @param password 密码
      */
@@ -188,5 +189,20 @@ public class UserInfoService {
         userInfoVo.setIntroduce(user.getIntroduce());
         userInfoVo.setAvatarUrl(user.getAvatarUrl());
         return userInfoVo;
+    }
+
+    /**
+     * 更新当前用户信息
+     * @param nickname 昵称
+     * @param introduce 个性签名
+     */
+    @Transactional
+    public void updateCurrentUserInfo(String nickname, String introduce) {
+        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("id", StpUtil.getLoginIdAsLong());
+        User user = new User();
+        user.setNickname(nickname);
+        user.setIntroduce(introduce);
+        userService.update(user, updateWrapper);
     }
 }
