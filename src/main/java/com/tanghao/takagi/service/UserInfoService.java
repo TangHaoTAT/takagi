@@ -107,10 +107,10 @@ public class UserInfoService {
         userService.save(user);
         user.setNickname("用户" + user.getId());
         if (TakagiUtil.isValidEmail(openCode)) {
-            user.setEmailAddress(openCode);
+            user.setEmail(openCode);
         }
         if (TakagiUtil.isValidChineseMobileNumber(openCode)) {
-            user.setMobileNumber(openCode);
+            user.setPhone(openCode);
         }
         user.setPassword(password);
         userService.saveOrUpdate(user);

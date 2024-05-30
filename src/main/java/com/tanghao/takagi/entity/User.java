@@ -18,9 +18,9 @@ public class User {
 
     private String nickname;// 昵称
 
-    private String mobileNumber;// 手机号
+    private String phone;// 手机号
 
-    private String emailAddress;// 邮箱
+    private String email;// 邮箱
 
     private String password;// 登录密码
 
