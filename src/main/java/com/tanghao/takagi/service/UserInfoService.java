@@ -67,7 +67,7 @@ public class UserInfoService {
             mailUtil.sendMailMessage(to, verCode + " 是你的 Takagi 验证码", text, true, null);
             log.info("邮箱验证码已发送至：" + openCode);
         }
-        if (TakagiUtil.isValidChineseMobileNumber(openCode)) {
+        if (TakagiUtil.isValidChinesePhone(openCode)) {
             log.info("短信验证码已发送至：");
         }
     }
@@ -92,7 +92,7 @@ public class UserInfoService {
      */
     public User getUserByOpenCode(String openCode) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("email_address", openCode).or().eq("mobile_number", openCode);
+        queryWrapper.eq("email", openCode).or().eq("phone", openCode);
         return userService.getOne(queryWrapper);
     }
 
@@ -103,17 +103,23 @@ public class UserInfoService {
      */
     @Transactional
     public User registerNewUser(String openCode, String password) {
+        String nickname = "用户" + TakagiUtil.generateNicknameSuffix();
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("nickname", nickname);
+        while (userService.exists(queryWrapper)) {
+            nickname = "用户" + TakagiUtil.generateNicknameSuffix();
+            queryWrapper.eq("nickname", nickname);
+        }
         User user = new User();
-        userService.save(user);
-        user.setNickname("用户" + user.getId());
+        user.setNickname(nickname);
         if (TakagiUtil.isValidEmail(openCode)) {
             user.setEmail(openCode);
         }
-        if (TakagiUtil.isValidChineseMobileNumber(openCode)) {
+        if (TakagiUtil.isValidChinesePhone(openCode)) {
             user.setPhone(openCode);
         }
         user.setPassword(password);
-        userService.saveOrUpdate(user);
+        userService.save(user);
         return user;
     }
 
@@ -198,11 +204,24 @@ public class UserInfoService {
      */
     @Transactional
     public void updateCurrentUserInfo(String nickname, String introduce) {
+        if (isNicknameExists(nickname)) {
+            throw new RuntimeException("该昵称已存在");
+        }
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("id", StpUtil.getLoginIdAsLong());
         User user = new User();
         user.setNickname(nickname);
         user.setIntroduce(introduce);
         userService.update(user, updateWrapper);
+    }
+
+    /**
+     * 判断用户昵称是否重复(不包含当前登录用户的昵称)
+     * @param nickname 昵称
+     */
+    public Boolean isNicknameExists(String nickname) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("nickname", nickname).ne("id", StpUtil.getLoginIdAsLong());
+        return userService.exists(queryWrapper);
     }
 }

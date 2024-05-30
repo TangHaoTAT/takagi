@@ -2,7 +2,6 @@ package com.tanghao.takagi.utils;
 
 import cn.hutool.core.util.ObjectUtil;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.regex.Pattern;
 
 /**
  * @description 常用工具类
@@ -17,27 +16,39 @@ public class TakagiUtil {
     }
 
     /**
-     * 使用正则表达式来判断一个字符串是否是有效的电子邮箱地址
-     * @param emailAddress 邮箱地址
+     * 随机生成8位数的昵称后缀
+     * @return 8位数的昵称后缀
      */
-    public static boolean isValidEmail(String emailAddress) {
-        if (ObjectUtil.isNull(emailAddress)) {
+    public static String generateNicknameSuffix() {
+        String SUFFIX = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        StringBuilder nicknameSuffix = new StringBuilder();
+        for (int i = 0; i < 8; i++) {
+            nicknameSuffix.append(SUFFIX.charAt((int) (Math.random() * SUFFIX.length())));
+        }
+        return nicknameSuffix.toString();
+    }
+
+    /**
+     * 使用正则表达式来判断一个字符串是否是有效的电子邮箱地址
+     * @param email 邮箱地址
+     */
+    public static boolean isValidEmail(String email) {
+        if (ObjectUtil.isNull(email)) {
             return false;
         }
-        String EMAIL_REGEX = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-        Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
-        return EMAIL_PATTERN.matcher(emailAddress).matches();
+        String EMAIL_REGEX = "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$";
+        return email.matches(EMAIL_REGEX);
     }
 
     /**
      * 使用正则表达式来判断一个字符串是否是一个合法的手机号
-     * @param mobileNumber 手机号
+     * @param phone 手机号
      */
-    public static boolean isValidChineseMobileNumber(String mobileNumber) {
-        if (ObjectUtil.isNull(mobileNumber)) {
+    public static boolean isValidChinesePhone(String phone) {
+        if (ObjectUtil.isNull(phone)) {
             return false;
         }
-        String regex = "^1\\d{10}$";
-        return mobileNumber.matches(regex);
+        String PHONE_REGEX = "^1[3456789]\\d{9}$";
+        return phone.matches(PHONE_REGEX);
     }
 }
