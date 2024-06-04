@@ -41,9 +41,10 @@ public class UserController {
         return CommonResult.ok();
     }
 
-    /*@Operation(summary ="更新头像")
+    /*@SneakyThrows
+    @Operation(summary ="更新头像")
     @PostMapping(value = "/uploadAvatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public CommonResult uploadAvatar(@RequestPart MultipartFile file) throws IOException {
+    public CommonResult uploadAvatar(@RequestPart MultipartFile file) {
         long fileSize = file.getSize();
         String fileType = FileTypeUtil.getType(file.getInputStream());
         String[] PIC_EXT = {"png", "jpg"};
