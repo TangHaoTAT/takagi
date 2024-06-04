@@ -21,7 +21,7 @@ public class CommentService extends ServiceImpl<CommentMapper, Comment> {
      * @param currentNo 第几页
      * @param pageSize 每页显示条数
      */
-    public CommonPage<List<CommentVo>> getMessageBoardContentByPage(Long currentNo, Long pageSize) {
+    public CommonPage<List<CommentVo>> getMessageBoardByPage(Long currentNo, Long pageSize) {
         Page<CommentVo> page = getBaseMapper().getCommentVoByPage(new Page<>(currentNo, pageSize), "MESSAGE_BOARD", null);
         return CommonPage.get(currentNo, pageSize, page.getTotal(), page.getRecords());
     }

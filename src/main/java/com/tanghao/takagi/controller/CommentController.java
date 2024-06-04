@@ -25,10 +25,10 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
-    @GetMapping("/getMessageBoardContentByPage")
-    @Operation(summary ="按页获取留言板内容")
-    public CommonResult<CommonPage<List<CommentVo>>> getMessageBoardContentByPage(@RequestParam(name = "currentNo", defaultValue = "1") Long currentNo,
+    @GetMapping("/getMessageBoardByPage")
+    @Operation(summary ="按页获取留言板")
+    public CommonResult<CommonPage<List<CommentVo>>> getMessageBoardByPage(@RequestParam(name = "currentNo", defaultValue = "1") Long currentNo,
                                                                                   @RequestParam(name = "pageSize", defaultValue = "10") Long pageSize) {
-        return CommonResult.data(commentService.getMessageBoardContentByPage(currentNo, pageSize));
+        return CommonResult.data(commentService.getMessageBoardByPage(currentNo, pageSize));
     }
 }
