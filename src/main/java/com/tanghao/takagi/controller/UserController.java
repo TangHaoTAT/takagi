@@ -25,8 +25,7 @@ public class UserController {
     @GetMapping("/getUserInfo")
     @Operation(summary ="获取当前用户信息")
     public CommonResult<UserInfoVo> getCurrentUserInfo() {
-        UserInfoVo userInfoVo = userInfoService.getCurrentUserInfo();
-        return CommonResult.data(userInfoVo);
+        return CommonResult.data(userInfoService.getCurrentUserInfo());
     }
 
     @PostMapping("/userInfoEdit")

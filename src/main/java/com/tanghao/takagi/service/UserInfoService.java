@@ -2,6 +2,7 @@ package com.tanghao.takagi.service;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -92,7 +93,9 @@ public class UserInfoService {
      */
     public User getUserByOpenCode(String openCode) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("email", openCode).or().eq("phone", openCode);
+        queryWrapper.lambda()
+                .eq(User::getDeleted, false)
+                .and(i -> i.and(j -> j.eq(User::getEmail, openCode).or().eq(User::getPhone, openCode)));
         return userService.getOne(queryWrapper);
     }
 
@@ -105,10 +108,13 @@ public class UserInfoService {
     public User registerNewUser(String openCode, String password) {
         String nickname = "用户" + TakagiUtil.generateNicknameSuffix();
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("nickname", nickname);
+        queryWrapper.lambda()
+//                .eq(User::getDeleted, false)
+                .eq(User::getNickname, nickname);
         while (userService.exists(queryWrapper)) {
             nickname = "用户" + TakagiUtil.generateNicknameSuffix();
-            queryWrapper.eq("nickname", nickname);
+            queryWrapper.lambda()
+                    .eq(User::getNickname, nickname);
         }
         User user = new User();
         user.setNickname(nickname);
@@ -119,6 +125,7 @@ public class UserInfoService {
             user.setPhone(openCode);
         }
         user.setPassword(password);
+        user.setCreateDate(DateUtil.date(System.currentTimeMillis()));
         userService.save(user);
         return user;
     }
@@ -187,14 +194,7 @@ public class UserInfoService {
      * 获取当前用户信息
      */
     public UserInfoVo getCurrentUserInfo() {
-        UserInfoVo userInfoVo = new UserInfoVo();
-        String loginId = StpUtil.getLoginIdAsString();
-        User user = userService.getBaseMapper().selectById(loginId);
-        userInfoVo.setUserId(user.getId());
-        userInfoVo.setNickname(user.getNickname());
-        userInfoVo.setIntroduce(user.getIntroduce());
-        userInfoVo.setAvatarUrl(user.getAvatarUrl());
-        return userInfoVo;
+        return userService.getBaseMapper().getUserInfoVoById(StpUtil.getLoginIdAsLong());
     }
 
     /**
@@ -204,24 +204,21 @@ public class UserInfoService {
      */
     @Transactional
     public void updateCurrentUserInfo(String nickname, String introduce) {
-        if (isNicknameExists(nickname)) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda()
+//                .eq(User::getDeleted, false)
+                .eq(User::getNickname, nickname)
+                .ne(User::getId, StpUtil.getLoginIdAsLong());
+        if (userService.exists(queryWrapper)) {
             throw new RuntimeException("该昵称已存在");
         }
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("id", StpUtil.getLoginIdAsLong());
+        updateWrapper.lambda()
+                .eq(User::getId, StpUtil.getLoginIdAsLong());
         User user = new User();
         user.setNickname(nickname);
         user.setIntroduce(introduce);
         userService.update(user, updateWrapper);
     }
 
-    /**
-     * 判断用户昵称是否重复(不包含当前登录用户的昵称)
-     * @param nickname 昵称
-     */
-    public Boolean isNicknameExists(String nickname) {
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("nickname", nickname).ne("id", StpUtil.getLoginIdAsLong());
-        return userService.exists(queryWrapper);
-    }
 }

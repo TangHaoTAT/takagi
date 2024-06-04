@@ -36,7 +36,7 @@ public class CommonResult<T> {
     }
 
     public static <T> CommonResult<T> data(T data) {
-        return new CommonResult<T>(CODE_SUCCESS, "ok", data);
+        return new CommonResult<>(CODE_SUCCESS, "ok", data);
     }
 
     // 构建失败

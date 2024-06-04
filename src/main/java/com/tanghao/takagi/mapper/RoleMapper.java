@@ -20,8 +20,11 @@ public interface RoleMapper extends BaseMapper<Role> {
             @Result(property = "code", column = "code"),
             @Result(property = "introduce", column = "introduce"),
     })
-    @Select(" select role.id, role.deleted, role.code, role.introduce from role " +
-            " join user_role ur on ur.role_id = role.id " +
-            " where ur.user_id = #{userId} ")
+    @Select({"<script>",
+            " select role.id, role.deleted, role.code, role.introduce from role ",
+            " join user_role ur on ur.role_id = role.id ",
+            " where 1=1 ",
+            " and ur.user_id = #{userId} ",
+            "</script>"})
     List<Role> listRoleByUserId(@Param("userId") Long userId);
 }

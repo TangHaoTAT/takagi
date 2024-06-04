@@ -20,8 +20,11 @@ public interface PermissionMapper extends BaseMapper<Permission> {
             @Result(property = "code", column = "code"),
             @Result(property = "introduce", column = "introduce"),
     })
-    @Select(" select distinct permission.id, permission.deleted, permission.code, permission.introduce from permission " +
-            " join role_permission rp on rp.permission_id = permission.id " +
-            " where rp.role_id in (select role.id from role join user_role ur on ur.role_id = role.id where ur.user_id = #{userId})")
+    @Select({"<script>",
+            " select distinct permission.id, permission.deleted, permission.code, permission.introduce from permission ",
+            " join role_permission rp on rp.permission_id = permission.id ",
+            " where 1=1 ",
+            " and rp.role_id in (select role.id from role join user_role ur on ur.role_id = role.id where ur.user_id = #{userId}) ",
+            "</script>"})
     List<Permission> listPermissionByUserId(@Param("userId") Long userId);
 }

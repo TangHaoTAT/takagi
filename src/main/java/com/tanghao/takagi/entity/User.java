@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import java.util.Date;
 
 /**
  * @description 用户
@@ -27,5 +28,7 @@ public class User {
     public String introduce;// 个性签名
 
     public String avatarUrl;//头像路径
+
+    public Date createDate;// 创建日期
 
 }

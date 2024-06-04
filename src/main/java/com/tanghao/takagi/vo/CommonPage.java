@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "通用分页数据")
-public class CommonPage {
+public class CommonPage<T> {
     @Schema(name = "currentNo", description = "第几页")
     private Long currentNo;// 第几页
 
@@ -20,16 +20,16 @@ public class CommonPage {
     private Long totalPages;// 总页数
 
     @Schema(name = "pageSize", description = "每页显示条数")
-    private Integer pageSize;// 每页显示条数
+    private Long pageSize;// 每页显示条数
 
     @Schema(name = "count", description = "总条数")
     private Long count;// 总条数
 
-    @Schema(name = "object", description = "查询结果")
-    private Object object;// 查询结果
+    @Schema(name = "data", description = "查询结果")
+    private T data;// 查询结果
 
-    public static CommonPage get(Long currentNo, Integer pageSize, Long count, Object object) {
+    public static <T> CommonPage<T> get(Long currentNo, Long pageSize, Long count, T data) {
         Long totalPages = count % pageSize > 0 ? (count / pageSize) + 1 : count / pageSize;// 获取总页数
-        return new CommonPage(currentNo, totalPages, pageSize, count, object);
+        return new CommonPage<>(currentNo, totalPages, pageSize, count, data);
     }
 }
