@@ -1,9 +1,9 @@
 package com.tanghao.takagi.controller;
 
 import com.tanghao.takagi.service.CommentService;
-import com.tanghao.takagi.vo.CommentVo;
 import com.tanghao.takagi.vo.CommonPage;
 import com.tanghao.takagi.vo.CommonResult;
+import com.tanghao.takagi.vo.MessageBoardVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -27,8 +27,8 @@ public class CommentController {
 
     @GetMapping("/getMessageBoardByPage")
     @Operation(summary ="按页获取留言板")
-    public CommonResult<CommonPage<List<CommentVo>>> getMessageBoardByPage(@RequestParam(name = "currentNo", defaultValue = "1") Long currentNo,
-                                                                                  @RequestParam(name = "pageSize", defaultValue = "10") Long pageSize) {
+    public CommonResult<CommonPage<List<MessageBoardVo>>> getMessageBoardByPage(@RequestParam(name = "currentNo", defaultValue = "1") Long currentNo,
+                                                                                @RequestParam(name = "pageSize", defaultValue = "10") Long pageSize) {
         return CommonResult.data(commentService.getMessageBoardByPage(currentNo, pageSize));
     }
 }
