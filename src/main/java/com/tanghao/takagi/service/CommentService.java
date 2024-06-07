@@ -9,7 +9,6 @@ import com.tanghao.takagi.vo.MessageBoardVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @description 评论Service
@@ -23,13 +22,7 @@ public class CommentService extends ServiceImpl<CommentMapper, Comment> {
      * @param pageSize 每页显示条数
      */
     public CommonPage<List<MessageBoardVo>> getMessageBoardByPage(Long currentNo, Long pageSize) {
-        Page<Comment> commentPage = getBaseMapper().getCommentByPage(new Page<>(currentNo, pageSize), "MESSAGE_BOARD", null);
-        Long commentTotal = commentPage.getTotal();
-        List<Comment> commentRecords = commentPage.getRecords();
-        List<Long> commentIds = commentRecords.stream().map(Comment::getId).distinct().collect(Collectors.toList());
-        List<Comment> replyRecords = getBaseMapper().list3RepliesByCommentIds(commentIds);
-
-
-        return null;
+        Page<MessageBoardVo> page = getBaseMapper().getMessageBoardVoByPage(new Page<>(currentNo, pageSize));
+        return CommonPage.get(currentNo, pageSize, page.getTotal(), page.getRecords());
     }
 }
