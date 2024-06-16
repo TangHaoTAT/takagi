@@ -32,6 +32,10 @@ public interface CommentMapper extends BaseMapper<Comment> {
             "</script>"})
     Page<MessageBoardVo> getMessageBoardVoByPage(Page<Comment> page);
 
+    /**
+     * 根据评论id获取对应评论
+     * @param commentId 评论id
+     */
     @Results(id = "getMessageBoardCommentVoByCommentId", value = {
             @Result(property = "commentId", column = "id", id = true),
             @Result(property = "content", column = "content"),
@@ -49,8 +53,9 @@ public interface CommentMapper extends BaseMapper<Comment> {
             " and id = #{commentId} ",
             "</script>",})
     MessageBoardCommentVo getMessageBoardCommentVoByCommentId(Long commentId);
+
     /**
-     * 获取每条评论的前3条回复
+     * 根据评论id获取每条评论的前3条回复
      * @param commentId 评论id
      */
     @Results(id = "list3RepliesByCommentIds", value = {
@@ -79,7 +84,7 @@ public interface CommentMapper extends BaseMapper<Comment> {
     List<MessageBoardCommentVo> listMessageBoard3RepliesVoByCommentId(Long commentId);
 
     /**
-     * 统计某条评论的回复总数
+     * 根据评论id统计回复总数
      * @param commentId 评论id
      */
     @Select({"<script>",
