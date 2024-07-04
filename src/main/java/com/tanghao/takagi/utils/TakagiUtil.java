@@ -20,7 +20,7 @@ public class TakagiUtil {
      * @return 8位数的昵称后缀
      */
     public static String generateNicknameSuffix() {
-        String SUFFIX = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        String SUFFIX = "abcdefghijkmnpqrstuvwxyz0123456789";
         StringBuilder nicknameSuffix = new StringBuilder();
         for (int i = 0; i < 8; i++) {
             nicknameSuffix.append(SUFFIX.charAt((int) (Math.random() * SUFFIX.length())));

@@ -26,8 +26,8 @@ spring:
   mail:
     host: smtp.qq.com # QQ邮箱服务器
     port: 465 # QQ邮箱端口号
-    username: # QQ邮箱账号
-    password: # QQ邮箱授权码
+    username:  # QQ邮箱账号
+    password:  # QQ邮箱授权码
     protocol: smtp
     default-encoding: UTF-8
     properties:
@@ -56,6 +56,6 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl # 不打印mybatis-plus日志
 #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 file:
-  static-access-url: /web-static/upload/** # 文件虚拟路径
+  access-path: /upload/** # 文件虚拟路径
   upload-folder: file:D://MyFiles/upload/ # 文件真实路径
-  access-path: http://127.0.0.1:8080/web-static/upload/ #访问路径
+  access-url: http://127.0.0.1:8080/upload/ #访问路径

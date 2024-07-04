@@ -13,8 +13,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class SaTokenConfigure implements WebMvcConfigurer {
-    @Value("${file.static-access-url}")
-    private String staticAccessUrl;
+    @Value("${file.access-path}")
+    private String accessPath;
 
     @Value("${file.upload-folder}")
     private String uploadFolder;
@@ -54,7 +54,7 @@ public class SaTokenConfigure implements WebMvcConfigurer {
     // 配置文件路径映射
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler(staticAccessUrl)
+        registry.addResourceHandler(accessPath)
                 .addResourceLocations(uploadFolder);
     }
 }

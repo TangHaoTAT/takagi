@@ -109,7 +109,6 @@ public class UserInfoService {
         String nickname = "用户" + TakagiUtil.generateNicknameSuffix();
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda()
-//                .eq(User::getDeleted, false)
                 .eq(User::getNickname, nickname);
         while (userService.exists(queryWrapper)) {
             nickname = "用户" + TakagiUtil.generateNicknameSuffix();
@@ -206,7 +205,6 @@ public class UserInfoService {
     public void updateCurrentUserInfo(String nickname, String introduce) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda()
-//                .eq(User::getDeleted, false)
                 .eq(User::getNickname, nickname)
                 .ne(User::getId, StpUtil.getLoginIdAsLong());
         if (userService.exists(queryWrapper)) {
