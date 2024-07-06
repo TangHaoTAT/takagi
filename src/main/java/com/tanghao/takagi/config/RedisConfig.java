@@ -29,7 +29,7 @@ public class RedisConfig {
     }
 
     /**
-     * 实现自定义缓存实现
+     * 自定义缓存实现
      */
     @Bean("globalCache")
     public IGlobalCache cache(RedisTemplate<String, Object> redisTemplate) {

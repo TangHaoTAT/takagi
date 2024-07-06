@@ -57,7 +57,7 @@ public class UserInfoService {
      * 在Redis中存储验证码信息，以‘openCode’的值为key，‘verCode’为field
      * @param openCode 邮箱或手机号
      */
-    public void sendVerCodeByOpenCode(String openCode) {
+    public void createLoginCaptcha(String openCode) {
         String verCode = TakagiUtil.generateVerCode();
         iGlobalCache.hset(openCode, "verCode", verCode, 600L);
         if (TakagiUtil.isValidEmail(openCode)) {
@@ -105,7 +105,7 @@ public class UserInfoService {
      * @param password 密码
      */
     @Transactional
-    public User registerNewUser(String openCode, String password) {
+    public User createNewUser(String openCode, String password) {
         String nickname = "用户" + TakagiUtil.generateNicknameSuffix();
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda()

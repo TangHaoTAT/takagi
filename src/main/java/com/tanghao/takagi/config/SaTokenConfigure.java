@@ -35,10 +35,10 @@ public class SaTokenConfigure implements WebMvcConfigurer {
     };
 
     private static final String[] URL = {
-            "/user/sendVerCode",
-            "/user/passwordlessLogin",
-            "/user/login",
-            "/user/register",
+            "/account/createLoginCaptcha",
+            "/account/passwordlessLogin",
+            "/account/login",
+            "/account/register",
     };
 
     // 注册 Sa-Token 拦截器，打开注解式鉴权功能

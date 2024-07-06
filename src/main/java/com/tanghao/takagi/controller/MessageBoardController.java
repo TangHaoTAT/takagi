@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * @description 评论Controller
+ * @description 留言板Controller
  */
 @Slf4j
 @RestController
 @RequestMapping("/comment")
-@Tag(name = "评论")
-public class CommentController {
+@Tag(name = "留言板")
+public class MessageBoardController {
     @Autowired
     private CommentService commentService;
 

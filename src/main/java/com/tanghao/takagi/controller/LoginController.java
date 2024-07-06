@@ -17,20 +17,20 @@ import org.springframework.web.bind.annotation.*;
  */
 @Slf4j
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/account")
 @Tag(name = "登录")
 public class LoginController {
     @Autowired
     private UserInfoService userInfoService;
 
-    @PostMapping("/sendVerCode")
+    @PostMapping("/createLoginCaptcha")
     @Operation(summary ="发送邮箱验证码或短信验证码")
-    public CommonResult sendVerCode(@RequestBody VerCodeVo verCodeVo) {
+    public CommonResult createLoginCaptcha(@RequestBody VerCodeVo verCodeVo) {
         String openCode = verCodeVo.getOpenCode();
         if (StrUtil.isBlank(openCode)) {
             throw new RuntimeException("账号不能为空");
         }
-        userInfoService.sendVerCodeByOpenCode(openCode);
+        userInfoService.createLoginCaptcha(openCode);
         return CommonResult.ok();
     }
 
@@ -50,7 +50,7 @@ public class LoginController {
         // 若该用户不存在，为其创建账号
         User user = userInfoService.getUserByOpenCode(openCode);
         if (ObjectUtil.isNull(user)) {
-            user = userInfoService.registerNewUser(openCode, null);
+            user = userInfoService.createNewUser(openCode, null);
         }
         userInfoService.login(user.getId());
         return CommonResult.ok();
@@ -91,7 +91,7 @@ public class LoginController {
         if (ObjectUtil.isNotNull(user)) {
             throw new RuntimeException("该账号已存在");
         }
-        userInfoService.registerNewUser(openCode, DigestUtil.md5Hex(password));
+        userInfoService.createNewUser(openCode, DigestUtil.md5Hex(password));
         return CommonResult.ok();
     }
 
