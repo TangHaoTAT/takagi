@@ -1,9 +1,7 @@
 package com.tanghao.takagi.controller;
 
 import com.tanghao.takagi.service.CommentService;
-import com.tanghao.takagi.vo.CommonPage;
-import com.tanghao.takagi.vo.CommonResult;
-import com.tanghao.takagi.vo.MessageBoardVo;
+import com.tanghao.takagi.vo.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -27,8 +25,16 @@ public class MessageBoardController {
 
     @GetMapping("/getMessageBoardByPage")
     @Operation(summary ="按页获取留言板")
-    public CommonResult<CommonPage<List<MessageBoardVo>>> getMessageBoardByPage(@RequestParam(name = "currentNo", defaultValue = "1") Long currentNo,
-                                                                                @RequestParam(name = "pageSize", defaultValue = "10") Long pageSize) {
-        return CommonResult.data(commentService.getMessageBoardByPage(currentNo, pageSize));
+    public CommonResult<CommonPage<List<MessageBoardCommentVo>>> getMessageBoardByPage(@RequestParam(name = "pageNum", defaultValue = "1") Long pageNum,
+                                                                                       @RequestParam(name = "pageSize", defaultValue = "10") Long pageSize) {
+        return CommonResult.data(commentService.getMessageBoardByPage(pageNum, pageSize));
+    }
+
+    @GetMapping("/getRepliesByCommentIdByPage")
+    @Operation(summary ="按页获取某条评论的回复")
+    public CommonResult<CommonPage<List<CommentVo>>> getRepliesByCommentIdByPage(@RequestParam(name = "pageNum", defaultValue = "1") Long pageNum,
+                                                                                           @RequestParam(name = "pageSize", defaultValue = "10") Long pageSize,
+                                                                                           @RequestParam(name = "commentId") Long commentId) {
+        return CommonResult.data(commentService.getRepliesByCommentIdByPage(pageNum, pageSize, commentId));
     }
 }
