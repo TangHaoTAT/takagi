@@ -36,6 +36,9 @@ public class UserController {
     @Value("${file.upload-folder}")
     private String uploadFolder;
 
+    @Value("${file.access-url-prefix}")
+    private String accessUrlPrefix;
+
     @GetMapping("/getCurrentUserInfo")
     @Operation(summary ="获取当前用户信息")
     public CommonResult<UserInfoVo> getCurrentUserInfo() {
@@ -78,8 +81,8 @@ public class UserController {
         String filePath = uploadFolder + dirName + fileName;
         FileWriter fileWriter = new FileWriter(filePath);
         fileWriter.writeFromStream(file.getInputStream());
-        String relativePath = dirName + fileName;
-        userInfoService.updateUserAvatar(relativePath);
+        String avatarUrl = accessUrlPrefix + dirName + fileName;
+        userInfoService.updateUserAvatar(avatarUrl);
         return CommonResult.ok();
     }
 }

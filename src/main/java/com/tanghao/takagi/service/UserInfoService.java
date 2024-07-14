@@ -53,9 +53,6 @@ public class UserInfoService {
     @Autowired
     private TemplateEngine templateEngine;
 
-    @Value("${file.access-url-prefix}")
-    private String accessUrlPrefix;
-
     /**
      * 根据openCode发送邮件验证码或手机短信验证码
      * 在Redis中存储验证码信息，以‘openCode’的值为key，‘verCode’为field
@@ -197,9 +194,7 @@ public class UserInfoService {
      * 获取当前用户信息
      */
     public UserInfoVo getCurrentUserInfo() {
-        UserInfoVo userInfoVo = userService.getBaseMapper().getUserInfoVoById(StpUtil.getLoginIdAsLong());
-        userInfoVo.setAvatarUrl(accessUrlPrefix + userInfoVo.getAvatarUrl());
-        return userInfoVo;
+        return userService.getBaseMapper().getUserInfoVoById(StpUtil.getLoginIdAsLong());
     }
 
     /**
@@ -227,14 +222,14 @@ public class UserInfoService {
 
     /**
      * 更新用户头像
-     * @param relativePath 相对路径
+     * @param avatarUrl 图片路径
      */
-    public void updateUserAvatar(String relativePath) {
+    public void updateUserAvatar(String avatarUrl) {
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
         updateWrapper.lambda()
                 .eq(User::getId, StpUtil.getLoginIdAsLong());
         User user = new User();
-        user.setAvatarUrl(relativePath);
+        user.setAvatarUrl(avatarUrl);
         userService.update(user, updateWrapper);
     }
 
