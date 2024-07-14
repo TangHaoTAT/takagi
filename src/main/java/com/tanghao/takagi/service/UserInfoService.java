@@ -16,6 +16,7 @@ import com.tanghao.takagi.utils.TakagiUtil;
 import com.tanghao.takagi.vo.UserInfoVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
@@ -51,6 +52,9 @@ public class UserInfoService {
 
     @Autowired
     private TemplateEngine templateEngine;
+
+    @Value("${file.access-url-prefix}")
+    private String accessUrlPrefix;
 
     /**
      * 根据openCode发送邮件验证码或手机短信验证码
@@ -193,7 +197,9 @@ public class UserInfoService {
      * 获取当前用户信息
      */
     public UserInfoVo getCurrentUserInfo() {
-        return userService.getBaseMapper().getUserInfoVoById(StpUtil.getLoginIdAsLong());
+        UserInfoVo userInfoVo = userService.getBaseMapper().getUserInfoVoById(StpUtil.getLoginIdAsLong());
+        userInfoVo.setAvatarUrl(accessUrlPrefix + userInfoVo.getAvatarUrl());
+        return userInfoVo;
     }
 
     /**
@@ -216,6 +222,19 @@ public class UserInfoService {
         User user = new User();
         user.setNickname(nickname);
         user.setIntroduce(introduce);
+        userService.update(user, updateWrapper);
+    }
+
+    /**
+     * 更新用户头像
+     * @param relativePath 相对路径
+     */
+    public void updateUserAvatar(String relativePath) {
+        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.lambda()
+                .eq(User::getId, StpUtil.getLoginIdAsLong());
+        User user = new User();
+        user.setAvatarUrl(relativePath);
         userService.update(user, updateWrapper);
     }
 
