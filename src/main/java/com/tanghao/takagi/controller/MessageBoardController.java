@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Slf4j
 @RestController
-@RequestMapping("/comment")
+@RequestMapping("/messageBoard")
 @Tag(name = "留言板")
 public class MessageBoardController {
     @Autowired

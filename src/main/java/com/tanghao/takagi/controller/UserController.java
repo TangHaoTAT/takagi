@@ -22,7 +22,7 @@ public class UserController {
     @Autowired
     private UserInfoService userInfoService;
 
-    @GetMapping("/getUserInfo")
+    @GetMapping("/getCurrentUserInfo")
     @Operation(summary ="获取当前用户信息")
     public CommonResult<UserInfoVo> getCurrentUserInfo() {
         return CommonResult.data(userInfoService.getCurrentUserInfo());
