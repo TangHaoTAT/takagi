@@ -221,12 +221,25 @@ public class UserInfoService {
      * 更新当前用户头像
      * @param avatarUrl 图片路径
      */
-    public void updateUserAvatar(String avatarUrl) {
+    public void updateCurrentUserAvatar(String avatarUrl) {
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
         updateWrapper.lambda()
                 .eq(User::getId, StpUtil.getLoginIdAsLong());
         User user = new User();
         user.setAvatarUrl(avatarUrl);
+        userService.update(user, updateWrapper);
+    }
+
+    /**
+     * 更新当前用户密码
+     * @param newPassword 新密码
+     */
+    public void updateCurrentUserPassword(String newPassword) {
+        UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.lambda()
+                .eq(User::getId, StpUtil.getLoginIdAsLong());
+        User user = new User();
+        user.setPassword(newPassword);
         userService.update(user, updateWrapper);
     }
 

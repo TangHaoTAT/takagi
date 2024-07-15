@@ -2,7 +2,7 @@ package com.tanghao.takagi.controller;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.crypto.digest.DigestUtil;
+import cn.hutool.crypto.SecureUtil;
 import com.tanghao.takagi.entity.User;
 import com.tanghao.takagi.service.UserInfoService;
 import com.tanghao.takagi.vo.*;
@@ -65,7 +65,7 @@ public class LoginController {
             throw new RuntimeException("账号或密码不能为空");
         }
         User user = userInfoService.getUserByOpenCode(openCode);
-        if (!DigestUtil.md5Hex(password).equals(user.getPassword())) {
+        if (!SecureUtil.md5(password).equals(user.getPassword())) {
             throw new RuntimeException("账号或密码错误");
         }
         userInfoService.login(user.getId());

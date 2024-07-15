@@ -7,6 +7,7 @@ import cn.hutool.core.io.file.FileWriter;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.SecureUtil;
 import com.tanghao.takagi.service.UserInfoService;
 import com.tanghao.takagi.vo.CommonResult;
 import com.tanghao.takagi.vo.UserInfoEditVo;
@@ -82,7 +83,14 @@ public class UserController {
         FileWriter fileWriter = new FileWriter(filePath);
         fileWriter.writeFromStream(file.getInputStream());
         String avatarUrl = accessUrlPrefix + dirName + fileName;
-        userInfoService.updateUserAvatar(avatarUrl);
+        userInfoService.updateCurrentUserAvatar(avatarUrl);
+        return CommonResult.ok();
+    }
+
+    @Operation(summary ="更新当前用户密码")
+    @PostMapping(value = "/setPassword")
+    public CommonResult setPassword(String newPassword) {
+        userInfoService.updateCurrentUserPassword(SecureUtil.md5(newPassword));
         return CommonResult.ok();
     }
 }
