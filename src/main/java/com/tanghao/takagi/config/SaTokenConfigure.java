@@ -38,7 +38,6 @@ public class SaTokenConfigure implements WebMvcConfigurer {
             "/account/createLoginCaptcha",
             "/account/passwordlessLogin",
             "/account/login",
-            "/account/register",
     };
 
     // 注册 Sa-Token 拦截器，打开注解式鉴权功能
