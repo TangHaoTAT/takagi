@@ -6,7 +6,7 @@ import com.tanghao.takagi.entity.Comment;
 import com.tanghao.takagi.mapper.CommentMapper;
 import com.tanghao.takagi.vo.CommentVo;
 import com.tanghao.takagi.vo.CommonPage;
-import com.tanghao.takagi.vo.MessageBoardCommentVo;
+import com.tanghao.takagi.vo.MessageBoardVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -22,8 +22,8 @@ public class CommentService extends ServiceImpl<CommentMapper, Comment> {
      * @param pageNum 第几页
      * @param pageSize 每页显示条数
      */
-    public CommonPage<List<MessageBoardCommentVo>> getMessageBoardByPage(Long pageNum, Long pageSize) {
-        Page<MessageBoardCommentVo> page = getBaseMapper().getMessageBoardVoByPage(new Page<>(pageNum, pageSize));
+    public CommonPage<List<MessageBoardVo>> getMessageBoardByPage(Long pageNum, Long pageSize) {
+        Page<MessageBoardVo> page = getBaseMapper().getMessageBoardVoByPage(new Page<>(pageNum, pageSize));
         return CommonPage.get(pageNum, pageSize, page.getTotal(), page.getRecords());
     }
 

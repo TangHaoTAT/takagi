@@ -16,7 +16,6 @@ import com.tanghao.takagi.utils.TakagiUtil;
 import com.tanghao.takagi.vo.UserInfoVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
@@ -143,8 +142,7 @@ public class UserInfoService {
      */
     public void login(Long userId) {
         refreshUserInfoInRedis(userId);
-        String loginId = "" + userId;
-        StpUtil.login(loginId);
+        StpUtil.login(userId);
     }
 
     /**
@@ -162,8 +160,7 @@ public class UserInfoService {
             userInfo.put("userId", user.getId());
             userInfo.put("roleList", JacksonUtil.convertObjectToJson(roles));
             userInfo.put("permissionList", JacksonUtil.convertObjectToJson(permissions));
-            String loginId = "" + userId;
-            iGlobalCache.hmset(loginId, userInfo);
+            iGlobalCache.hmset(userId + "", userInfo);
         }
     }
 
@@ -221,7 +218,7 @@ public class UserInfoService {
     }
 
     /**
-     * 更新用户头像
+     * 更新当前用户头像
      * @param avatarUrl 图片路径
      */
     public void updateUserAvatar(String avatarUrl) {

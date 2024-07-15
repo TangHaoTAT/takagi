@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tanghao.takagi.entity.Comment;
 import com.tanghao.takagi.vo.CommentVo;
-import com.tanghao.takagi.vo.MessageBoardCommentVo;
+import com.tanghao.takagi.vo.MessageBoardVo;
 import org.apache.ibatis.annotations.*;
 import java.util.List;
 
@@ -30,7 +30,7 @@ public interface CommentMapper extends BaseMapper<Comment> {
             " and deleted = false ",
             " order by id asc",
             "</script>"})
-    Page<MessageBoardCommentVo> getMessageBoardVoByPage(Page<Comment> page);
+    Page<MessageBoardVo> getMessageBoardVoByPage(Page<Comment> page);
 
     /**
      * 根据评论id获取对应评论

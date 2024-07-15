@@ -9,12 +9,18 @@ import java.util.List;
  */
 @Data
 @Schema(description = "留言板评论")
-public class MessageBoardCommentVo {
+public class MessageBoardVo {
     @Schema(name = "comment", description = "评论")
     public CommentVo comment;
 
     @Schema(name = "replies", description = "回复")
     public List<CommentVo> replies;
+
+    @Schema(name = "replyNum", description = "当前回复页数")
+    public Long replyNum = 1L;
+
+    @Schema(name = "replySize", description = "每页回复数量")
+    public Long replySize = 3L;
 
     @Schema(name = "replyCount", description = "回复总条数")
     public Long replyCount;

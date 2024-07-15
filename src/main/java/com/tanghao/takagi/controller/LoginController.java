@@ -72,33 +72,11 @@ public class LoginController {
         return CommonResult.ok();
     }
 
-    @PostMapping("/register")
-    @Operation(summary ="账号注册")
-    public CommonResult register(@RequestBody RegisterVo registerVo) {
-        String openCode = registerVo.getOpenCode();
-        String password = registerVo.getPassword();
-        String verCode = registerVo.getVerCode();
-        if (StrUtil.isBlank(openCode) || StrUtil.isBlank(password) || StrUtil.isBlank(verCode)) {
-            throw new RuntimeException("账号或密码或验证码不能为空");
-        }
-        // 校验openCode与verCode是否匹配
-        Boolean status = userInfoService.isOpenCodeAndVerCodeMatch(openCode, verCode);
-        if (!status) {
-            throw new RuntimeException("验证码过期，请重新发送");
-        }
-        // 若该用户不存在，为其创建账号
-        User user = userInfoService.getUserByOpenCode(openCode);
-        if (ObjectUtil.isNotNull(user)) {
-            throw new RuntimeException("该账号已存在");
-        }
-        userInfoService.createNewUser(openCode, DigestUtil.md5Hex(password));
-        return CommonResult.ok();
-    }
-
     @PostMapping("/logout")
     @Operation(summary ="退出登录")
     public CommonResult logout() {
         userInfoService.logout();
         return CommonResult.ok();
     }
+
 }

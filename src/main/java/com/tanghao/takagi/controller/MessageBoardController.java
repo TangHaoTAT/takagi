@@ -25,8 +25,8 @@ public class MessageBoardController {
 
     @GetMapping("/getMessageBoardByPage")
     @Operation(summary ="按页获取留言板")
-    public CommonResult<CommonPage<List<MessageBoardCommentVo>>> getMessageBoardByPage(@RequestParam(name = "pageNum", defaultValue = "1") Long pageNum,
-                                                                                       @RequestParam(name = "pageSize", defaultValue = "10") Long pageSize) {
+    public CommonResult<CommonPage<List<MessageBoardVo>>> getMessageBoardByPage(@RequestParam(name = "pageNum", defaultValue = "1") Long pageNum,
+                                                                                @RequestParam(name = "pageSize", defaultValue = "10") Long pageSize) {
         return CommonResult.data(commentService.getMessageBoardByPage(pageNum, pageSize));
     }
 
