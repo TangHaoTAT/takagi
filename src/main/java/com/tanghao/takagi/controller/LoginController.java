@@ -24,7 +24,7 @@ public class LoginController {
     private UserInfoService userInfoService;
 
     @PostMapping("/createLoginCaptcha")
-    @Operation(summary ="发送邮箱验证码或短信验证码")
+    @Operation(summary ="发送邮箱或短信登录验证码")
     public CommonResult createLoginCaptcha(@RequestBody VerCodeVo verCodeVo) {
         String openCode = verCodeVo.getOpenCode();
         if (StrUtil.isBlank(openCode)) {
@@ -43,7 +43,7 @@ public class LoginController {
             throw new RuntimeException("账号或验证码不能为空");
         }
         // 校验openCode与verCode是否匹配
-        Boolean status = userInfoService.isOpenCodeAndVerCodeMatch(openCode, verCode);
+        Boolean status = userInfoService.verifyLoginCaptcha(openCode, verCode);
         if (!status) {
             throw new RuntimeException("验证码过期，请重新发送");
         }

@@ -11,7 +11,7 @@ public class TakagiUtil {
      * 随机生成6位数的验证码
      * @return 6位数的验证码
      */
-    public static String generateVerCode() {
+    public static String createVerCode() {
         return String.format("%06d", ThreadLocalRandom.current().nextInt(1000000));
     }
 
@@ -19,7 +19,7 @@ public class TakagiUtil {
      * 随机生成8位数的昵称后缀
      * @return 8位数的昵称后缀
      */
-    public static String generateNicknameSuffix() {
+    public static String createNicknameSuffix() {
         String SUFFIX = "abcdefghijkmnpqrstuvwxyz0123456789";
         StringBuilder nicknameSuffix = new StringBuilder();
         for (int i = 0; i < 8; i++) {
@@ -32,7 +32,7 @@ public class TakagiUtil {
      * 使用正则表达式来判断一个字符串是否是有效的电子邮箱地址
      * @param email 邮箱地址
      */
-    public static boolean isValidEmail(String email) {
+    public static boolean verifyValidEmail(String email) {
         if (ObjectUtil.isNull(email)) {
             return false;
         }
@@ -44,7 +44,7 @@ public class TakagiUtil {
      * 使用正则表达式来判断一个字符串是否是一个合法的手机号
      * @param phone 手机号
      */
-    public static boolean isValidChinesePhone(String phone) {
+    public static boolean verifyValidChinesePhone(String phone) {
         if (ObjectUtil.isNull(phone)) {
             return false;
         }

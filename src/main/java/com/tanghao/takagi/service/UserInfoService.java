@@ -54,13 +54,13 @@ public class UserInfoService {
 
     /**
      * 根据openCode发送邮件验证码或手机短信验证码
-     * 在Redis中存储验证码信息，以‘openCode’的值为key，‘verCode’为field
+     * 在Redis中存储验证码信息，以"LOGIN_" + openCode的值为key，‘verCode’为field
      * @param openCode 邮箱或手机号
      */
     public void createLoginCaptcha(String openCode) {
-        String verCode = TakagiUtil.generateVerCode();
-        iGlobalCache.hset(openCode, "verCode", verCode, 600L);
-        if (TakagiUtil.isValidEmail(openCode)) {
+        String verCode = TakagiUtil.createVerCode();
+        iGlobalCache.hset("LOGIN_" + openCode, "verCode", verCode, 600L);
+        if (TakagiUtil.verifyValidEmail(openCode)) {
             Context context = new Context();
             context.setVariable("verCode", ListUtil.toList(verCode.split("")));
             String text = templateEngine.process("EmailVerCode", context);
@@ -68,20 +68,20 @@ public class UserInfoService {
             mailUtil.sendMailMessage(to, verCode + " 是你的 Takagi 验证码", text, true, null);
             log.info("邮箱验证码已发送至：" + openCode);
         }
-        if (TakagiUtil.isValidChinesePhone(openCode)) {
+        if (TakagiUtil.verifyValidChinesePhone(openCode)) {
             log.info("短信验证码已发送至：");
         }
     }
 
     /**
-     * 校验openCode与verCode是否匹配
+     * 校验登录验证码
      * @param openCode 邮箱或手机号
      * @param verCode 验证码
      */
-    public Boolean isOpenCodeAndVerCodeMatch(String openCode, String verCode) {
-        Object verCodeInRedis = iGlobalCache.hget(openCode, "verCode");
+    public Boolean verifyLoginCaptcha(String openCode, String verCode) {
+        Object verCodeInRedis = iGlobalCache.hget("LOGIN_" + openCode, "verCode");
         if (verCode.equals(verCodeInRedis)) {
-            iGlobalCache.hdel(openCode, "verCode");
+            iGlobalCache.hdel("LOGIN_" + openCode, "verCode");
             return true;
         }
         return false;
@@ -106,21 +106,21 @@ public class UserInfoService {
      */
     @Transactional
     public User createNewUser(String openCode, String password) {
-        String nickname = "用户" + TakagiUtil.generateNicknameSuffix();
+        String nickname = "用户" + TakagiUtil.createNicknameSuffix();
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda()
                 .eq(User::getNickname, nickname);
         while (userService.exists(queryWrapper)) {
-            nickname = "用户" + TakagiUtil.generateNicknameSuffix();
+            nickname = "用户" + TakagiUtil.createNicknameSuffix();
             queryWrapper.lambda()
                     .eq(User::getNickname, nickname);
         }
         User user = new User();
         user.setNickname(nickname);
-        if (TakagiUtil.isValidEmail(openCode)) {
+        if (TakagiUtil.verifyValidEmail(openCode)) {
             user.setEmail(openCode);
         }
-        if (TakagiUtil.isValidChinesePhone(openCode)) {
+        if (TakagiUtil.verifyValidChinesePhone(openCode)) {
             user.setPhone(openCode);
         }
         user.setPassword(password);
