@@ -6,13 +6,13 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * @description 评论
+ * @description 回复
  */
 @Data
-@Schema(description = "评论")
-public class CommentVo {
-    @Schema(name = "commentId", description = "评论id")
-    public Long commentId;
+@Schema(description = "回复")
+public class ReplyVo {
+    @Schema(name = "replyId", description = "回复id")
+    public Long replyId;
 
     @Schema(name = "content", description = "内容")
     public String content;
@@ -33,8 +33,8 @@ public class CommentVo {
     @Schema(name = "likes", description = "点赞次数")
     public Long likes;
 
-    @Schema(name = "rootCommentId", description = "根评论id")
-    public Long rootCommentId;
+    @Schema(name = "rootReplyId", description = "根回复id")
+    public Long rootReplyId;
 
     @Schema(name = "toUser", description = "被回复用户")
     public UserInfoVo toUser;

@@ -91,7 +91,7 @@ public class UserInfoService {
      * 根据openCode获取用户
      * @param openCode 邮箱或手机号
      */
-    public User getUserByOpenCode(String openCode) {
+    public User getUser(String openCode) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda()
                 .eq(User::getDeleted, false)
@@ -191,7 +191,7 @@ public class UserInfoService {
      * 获取当前用户信息
      */
     public UserInfoVo getCurrentUserInfo() {
-        return userService.getBaseMapper().getUserInfoVoById(StpUtil.getLoginIdAsLong());
+        return userService.getBaseMapper().getUserInfoVoByUserId(StpUtil.getLoginIdAsLong());
     }
 
     /**

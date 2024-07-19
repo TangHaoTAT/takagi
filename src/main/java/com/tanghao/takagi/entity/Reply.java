@@ -7,13 +7,13 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * @description 评论
+ * @description 回复
  */
 @Data
-@TableName("comment")
-public class Comment {
+@TableName("reply")
+public class Reply {
     @TableId(type = IdType.AUTO)
-    private Long id;// 评论id
+    private Long id;// 回复id
 
     private Boolean deleted;// 逻辑删除:0=未删除,1=已删除
 
@@ -29,7 +29,7 @@ public class Comment {
 
     private Long likes;// 点赞次数
 
-    private Long rootCommentId;// 根评论id
+    private Long rootReplyId;// 根回复id
 
     private Long toUserId;// 被回复用户id
 }

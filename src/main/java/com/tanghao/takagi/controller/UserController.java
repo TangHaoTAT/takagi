@@ -46,9 +46,9 @@ public class UserController {
         return CommonResult.data(userInfoService.getCurrentUserInfo());
     }
 
-    @PostMapping("/userInfoEdit")
+    @PostMapping("/updateCurrentUserInfo")
     @Operation(summary ="更新当前用户信息")
-    public CommonResult userInfoEdit(@RequestBody UserInfoEditVo userInfoEditVo) {
+    public CommonResult updateCurrentUserInfo(@RequestBody UserInfoEditVo userInfoEditVo) {
         String nickname = userInfoEditVo.getNickname();
         String introduce = userInfoEditVo.getIntroduce();
         if (StrUtil.isBlank(nickname)) {

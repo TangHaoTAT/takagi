@@ -48,7 +48,7 @@ public class LoginController {
             throw new RuntimeException("验证码过期，请重新发送");
         }
         // 若该用户不存在，为其创建账号
-        User user = userInfoService.getUserByOpenCode(openCode);
+        User user = userInfoService.getUser(openCode);
         if (ObjectUtil.isNull(user)) {
             user = userInfoService.createNewUser(openCode, null);
         }
@@ -64,7 +64,7 @@ public class LoginController {
         if (StrUtil.isBlank(openCode) || StrUtil.isBlank(password)) {
             throw new RuntimeException("账号或密码不能为空");
         }
-        User user = userInfoService.getUserByOpenCode(openCode);
+        User user = userInfoService.getUser(openCode);
         if (!SecureUtil.md5(password).equals(user.getPassword())) {
             throw new RuntimeException("账号或密码错误");
         }

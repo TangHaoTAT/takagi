@@ -5,23 +5,17 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * @description 留言板评论
+ * @description 留言板
  */
 @Data
-@Schema(description = "留言板评论")
+@Schema(description = "留言板")
 public class MessageBoardVo {
-    @Schema(name = "comment", description = "评论")
-    public CommentVo comment;
+    @Schema(name = "reply", description = "回复")
+    public ReplyVo reply;
 
-    @Schema(name = "replies", description = "回复")
-    public List<CommentVo> replies;
+    @Schema(name = "subReplies", description = "子回复")
+    public List<ReplyVo> subReplies;
 
-    @Schema(name = "replyNum", description = "当前回复页数")
-    public Long replyNum = 1L;
-
-    @Schema(name = "replySize", description = "每页回复数量")
-    public Long replySize = 3L;
-
-    @Schema(name = "replyCount", description = "回复总条数")
-    public Long replyCount;
+    @Schema(name = "subReplyCount", description = "回复总条数")
+    public Long subReplyCount;
 }

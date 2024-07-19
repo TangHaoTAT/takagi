@@ -106,11 +106,11 @@ CREATE TABLE `user_role`  (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for comment
+-- Table structure for reply
 -- ----------------------------
-DROP TABLE IF EXISTS `comment`;
-CREATE TABLE `comment`  (
-  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '评论ID',
+DROP TABLE IF EXISTS `reply`;
+CREATE TABLE `reply`  (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '回复ID',
   `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '内容',
   `create_date` datetime NOT NULL COMMENT '创建日期',
   `from_user_id` bigint UNSIGNED NOT NULL COMMENT '用户ID',
@@ -118,25 +118,25 @@ CREATE TABLE `comment`  (
   `type_id` bigint UNSIGNED NULL DEFAULT NULL COMMENT '对应类型ID',
   `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '评论类型',
   `likes` bigint UNSIGNED NOT NULL DEFAULT 0 COMMENT '点赞次数',
-  `root_comment_id` bigint UNSIGNED NULL DEFAULT NULL COMMENT '根评论ID',
+  `root_reply_id` bigint UNSIGNED NULL DEFAULT NULL COMMENT '根回复ID',
   `to_user_id` bigint UNSIGNED NULL DEFAULT NULL COMMENT '被回复用户ID',
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `comment_ibfk_1`(`root_comment_id`) USING BTREE,
-  INDEX `comment_ibfk_2`(`from_user_id`) USING BTREE,
-  INDEX `comment_ibfk_3`(`to_user_id`) USING BTREE,
-  CONSTRAINT `comment_ibfk_1` FOREIGN KEY (`root_comment_id`) REFERENCES `comment` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `comment_ibfk_2` FOREIGN KEY (`from_user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `comment_ibfk_3` FOREIGN KEY (`to_user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  INDEX `reply_ibfk_1`(`root_reply_id`) USING BTREE,
+  INDEX `reply_ibfk_2`(`from_user_id`) USING BTREE,
+  INDEX `reply_ibfk_3`(`to_user_id`) USING BTREE,
+  CONSTRAINT `reply_ibfk_1` FOREIGN KEY (`root_reply_id`) REFERENCES `reply` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `reply_ibfk_2` FOREIGN KEY (`from_user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `reply_ibfk_3` FOREIGN KEY (`to_user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of comment
+-- Records of reply
 -- ----------------------------
--- INSERT INTO `comment` VALUES (1, 'hello world！', '2024-06-04 16:23:13', 1, 0, NULL, 'MESSAGE_BOARD', 0, NULL, NULL);
--- INSERT INTO `comment` VALUES (2, 'hello world！！', '2024-06-04 16:24:54', 2, 0, NULL, 'MESSAGE_BOARD', 0, NULL, NULL);
--- INSERT INTO `comment` VALUES (3, '回复1', '2024-06-18 16:25:20', 2, 0, NULL, 'MESSAGE_BOARD', 0, 1, NULL);
--- INSERT INTO `comment` VALUES (4, '回复->回复1', '2024-06-22 16:26:31', 1, 0, NULL, 'MESSAGE_BOARD', 0, 1, 2);
--- INSERT INTO `comment` VALUES (5, '回复2', '2024-06-28 16:28:13', 3, 0, NULL, 'MESSAGE_BOARD', 0, 1, NULL);
--- INSERT INTO `comment` VALUES (6, '回复->回复回复1', '2024-06-30 16:30:16', 2, 0, NULL, 'MESSAGE_BOARD', 0, 1, 1);
+-- INSERT INTO `reply` VALUES (1, 'hello world1', '2024-06-04 16:23:13', 1, 0, NULL, 'MESSAGE_BOARD', 0, NULL, NULL);
+-- INSERT INTO `reply` VALUES (2, 'hello world2', '2024-06-04 16:24:54', 2, 0, NULL, 'MESSAGE_BOARD', 0, NULL, NULL);
+-- INSERT INTO `reply` VALUES (3, '回复1', '2024-06-18 16:25:20', 2, 0, NULL, 'MESSAGE_BOARD', 0, 1, NULL);
+-- INSERT INTO `reply` VALUES (4, '回复->回复1', '2024-06-22 16:26:31', 1, 0, NULL, 'MESSAGE_BOARD', 0, 1, 2);
+-- INSERT INTO `reply` VALUES (5, '回复2', '2024-06-28 16:28:13', 3, 0, NULL, 'MESSAGE_BOARD', 0, 1, NULL);
+-- INSERT INTO `reply` VALUES (6, '回复->回复回复1', '2024-06-30 16:30:16', 2, 0, NULL, 'MESSAGE_BOARD', 0, 1, 1);
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -25,5 +25,5 @@ public interface UserMapper extends BaseMapper<User> {
             " where 1=1 ",
             " and id = #{userId} ",
             "</script>"})
-    UserInfoVo getUserInfoVoById(Long userId);
+    UserInfoVo getUserInfoVoByUserId(Long userId);
 }
