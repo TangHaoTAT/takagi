@@ -6,7 +6,6 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileWriter;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.tanghao.takagi.service.UserInfoService;
 import com.tanghao.takagi.vo.CommonResult;
@@ -14,11 +13,13 @@ import com.tanghao.takagi.vo.UserInfoEditVo;
 import com.tanghao.takagi.vo.UserInfoVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Size;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.Date;
@@ -26,6 +27,7 @@ import java.util.Date;
 /**
  * @description 用户Controller
  */
+@Validated
 @Slf4j
 @RestController
 @RequestMapping("/user")
@@ -48,12 +50,9 @@ public class UserController {
 
     @PostMapping("/updateCurrentUserInfo")
     @Operation(summary ="更新当前用户信息")
-    public CommonResult updateCurrentUserInfo(@RequestBody UserInfoEditVo userInfoEditVo) {
+    public CommonResult updateCurrentUserInfo(@Validated @RequestBody UserInfoEditVo userInfoEditVo) {
         String nickname = userInfoEditVo.getNickname();
         String introduce = userInfoEditVo.getIntroduce();
-        if (StrUtil.isBlank(nickname)) {
-            throw new RuntimeException("昵称不能为空");
-        }
         userInfoService.updateCurrentUserInfo(nickname, introduce);
         return CommonResult.ok();
     }
@@ -88,8 +87,8 @@ public class UserController {
     }
 
     @Operation(summary ="更新当前用户密码")
-    @PostMapping(value = "/setPassword")
-    public CommonResult setPassword(String newPassword) {
+    @PostMapping(value = "/updateCurrentUserPassword")
+    public CommonResult updateCurrentUserPassword(@Size(min = 6, max = 16) String newPassword) {
         userInfoService.updateCurrentUserPassword(SecureUtil.md5(newPassword));
         return CommonResult.ok();
     }

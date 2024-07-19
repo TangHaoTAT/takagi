@@ -1,5 +1,7 @@
 package com.tanghao.takagi.service;
 
+import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tanghao.takagi.entity.Reply;
@@ -37,4 +39,25 @@ public class ReplyService extends ServiceImpl<ReplyMapper, Reply> {
         Page<ReplyVo> page = getBaseMapper().getSubReplies(new Page<>(pageNum, pageSize), replyId);
         return CommonPage.get(pageNum, pageSize, page.getTotal(), page.getRecords());
     }
+
+    /**
+     * 发布回复
+     * @param content 内容
+     * @param typeId 对应类型id
+     * @param type 评论类型
+     * @param rootReplyId 根回复id
+     * @param toUserId 被回复用户id
+     */
+    public void createReply(String content, Long typeId, String type, Long rootReplyId, Long toUserId) {
+        Reply reply = new Reply();
+        reply.setContent(content);
+        reply.setTypeId(typeId);
+        reply.setType(type);
+        reply.setRootReplyId(rootReplyId);
+        reply.setToUserId(toUserId);
+        reply.setCreateDate(DateUtil.date(System.currentTimeMillis()));
+        reply.setFromUserId(StpUtil.getLoginIdAsLong());
+        this.save(reply);
+    }
+
 }

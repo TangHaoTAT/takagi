@@ -6,10 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
@@ -36,5 +33,17 @@ public class MessageBoardController {
                                                                  @RequestParam(name = "pageSize", defaultValue = "10") Long pageSize,
                                                                  @RequestParam(name = "replyId") Long replyId) {
         return CommonResult.data(replyService.getSubReplies(pageNum, pageSize, replyId));
+    }
+
+    @PostMapping("/createReply")
+    @Operation(summary = "发布回复")
+    public CommonResult createReply(@RequestBody ReplyEditVo replyEditVo) {
+        String content = replyEditVo.getContent();
+        Long typeId = replyEditVo.getTypeId();
+        String type = replyEditVo.getType();
+        Long rootReplyId = replyEditVo.getRootReplyId();
+        Long toUserId = replyEditVo.getToUserId();
+        replyService.createReply(content, typeId, type, rootReplyId, toUserId);
+        return CommonResult.ok();
     }
 }

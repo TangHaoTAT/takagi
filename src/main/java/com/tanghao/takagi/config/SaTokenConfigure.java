@@ -35,9 +35,11 @@ public class SaTokenConfigure implements WebMvcConfigurer {
     };
 
     private static final String[] URL = {
-            "/account/createLoginCaptcha",
-            "/account/passwordlessLogin",
+            "/account/createEmailLoginCaptcha",
+            "/account/EmailPasswordlessLogin",
             "/account/login",
+            "/messageBoard/getMessageBoardReplies",
+            "/messageBoard/getSubReplies",
     };
 
     // 注册 Sa-Token 拦截器，打开注解式鉴权功能

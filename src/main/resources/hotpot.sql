@@ -111,7 +111,7 @@ CREATE TABLE `user_role`  (
 DROP TABLE IF EXISTS `reply`;
 CREATE TABLE `reply`  (
   `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '回复ID',
-  `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '内容',
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '内容',
   `create_date` datetime NOT NULL COMMENT '创建日期',
   `from_user_id` bigint UNSIGNED NOT NULL COMMENT '用户ID',
   `deleted` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '逻辑删除:0=未删除,1=已删除',
