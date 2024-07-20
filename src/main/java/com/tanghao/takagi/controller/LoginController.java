@@ -38,10 +38,7 @@ public class LoginController {
         String email = passwordlessLoginInfoVo.getEmail();
         String verCode = passwordlessLoginInfoVo.getVerCode();
         // 校验openCode与verCode是否匹配
-        Boolean status = userInfoService.verifyLoginCaptcha(email, verCode);
-        if (!status) {
-            throw new RuntimeException("验证码过期，请重新发送");
-        }
+        userInfoService.verifyLoginCaptcha(email, verCode);
         // 若该用户不存在，为其创建账号
         User user = userInfoService.getUser(email);
         if (ObjectUtil.isNull(user)) {

@@ -58,18 +58,19 @@ public class UserInfoService {
      * @param openCode 邮箱或手机号
      */
     public void createLoginCaptcha(String openCode) {
+        String captchaKey = "LOGIN_" + openCode;
         String verCode = TakagiUtil.createVerCode();
-        iGlobalCache.hset("LOGIN_" + openCode, "verCode", verCode, 600L);
+        iGlobalCache.hset(captchaKey, "verCode", verCode, 600L);
         if (TakagiUtil.verifyValidEmail(openCode)) {
             Context context = new Context();
             context.setVariable("verCode", ListUtil.toList(verCode.split("")));
             String text = templateEngine.process("EmailVerCode", context);
             String[] to = {openCode};
             mailUtil.sendMailMessage(to, verCode + " 是你的 Takagi 验证码", text, true, null);
-            log.info("邮箱验证码已发送至：" + openCode);
+            log.info("登录验证码已发送至邮箱：" + openCode);
         }
         if (TakagiUtil.verifyValidChinesePhone(openCode)) {
-            log.info("短信验证码已发送至：");
+            log.info("登录验证码已发送至手机号：" + openCode);
         }
     }
 
@@ -78,13 +79,17 @@ public class UserInfoService {
      * @param openCode 邮箱或手机号
      * @param verCode 验证码
      */
-    public Boolean verifyLoginCaptcha(String openCode, String verCode) {
-        Object verCodeInRedis = iGlobalCache.hget("LOGIN_" + openCode, "verCode");
-        if (verCode.equals(verCodeInRedis)) {
-            iGlobalCache.hdel("LOGIN_" + openCode, "verCode");
-            return true;
+    public void verifyLoginCaptcha(String openCode, String verCode) {
+        String captchaKey = "LOGIN_" + openCode;
+        Object verCodeInRedis = iGlobalCache.hget(captchaKey, "verCode");
+        if (ObjectUtil.isNull(verCodeInRedis)) {
+            throw new RuntimeException("验证码过期，请重新获取");
         }
-        return false;
+        if (verCode.equals(verCodeInRedis)) {
+            iGlobalCache.hdel(captchaKey, "verCode");
+        }else {
+            throw new RuntimeException("请输入正确的验证码");
+        }
     }
 
     /**
